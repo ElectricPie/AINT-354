@@ -19,7 +19,7 @@ public class RPGTool : EditorWindow {
         EditorWindow mainWindow = EditorWindow.GetWindow(typeof(RPGTool));
 
         //Opens the character window in the same window as a tab
-        EditorWindow characterWindow = EditorWindow.GetWindow<RPGCharacterWindow>("Character", typeof(RPGTool));
+        //EditorWindow characterWindow = EditorWindow.GetWindow<RPGCharacterWindow>("Character", typeof(RPGTool));
     }
 
     private void OnGUI()
