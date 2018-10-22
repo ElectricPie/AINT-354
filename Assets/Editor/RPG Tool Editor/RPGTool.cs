@@ -9,7 +9,7 @@ using UnityEditor;
  */
 
 public class RPGTool : EditorWindow {
-    int currentTab;
+    int m_currentTab;
 
     //Adds button to unitys window dropdown to open the following windows
     [MenuItem("Window/RPG Tool")]
@@ -24,12 +24,10 @@ public class RPGTool : EditorWindow {
 
     private void OnGUI()
     {
-        
-
         //Creates and updates tabs
-        currentTab = GUILayout.Toolbar(currentTab, new string[] { "Test 1", "Test 2", "Test 3"});
+        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { "Test 1", "Test 2", "Test 3"});
 
-        switch (currentTab)
+        switch (m_currentTab)
         {
             case 0:
                 DisplayTabOne();
