@@ -9,7 +9,11 @@ using UnityEditor;
  */
 
 public class RPGTool : EditorWindow {
-    int m_currentTab;
+    private int m_currentTab;
+
+    private const string m_charPrefabPath = "Assets/RPG Tool Assets/prefabs/character.prefab";
+    private string m_textField_tab1 = "";
+    private string m_charName_tab2 = "";
 
     //Adds button to unitys window dropdown to open the following windows
     [MenuItem("Window/RPG Tool")]
@@ -24,8 +28,10 @@ public class RPGTool : EditorWindow {
 
     private void OnGUI()
     {
+        int previousTab = m_currentTab;
+
         //Creates and updates tabs
-        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { "Test 1", "Test 2", "Test 3"});
+        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { "General", "Character", "Test 3"});
 
         switch (m_currentTab)
         {
@@ -35,31 +41,47 @@ public class RPGTool : EditorWindow {
             case 1:
                 DisplayTabTwo();
                 break;
-        }        
+        }
+
+        //Checks if a tab is changed
+        if (previousTab != m_currentTab)
+        {
+            //Used to prefent text fields from having the same displayed value when switching tabs
+            GUI.FocusControl("");
+        }
     }
 
     //Tab 1
     private void DisplayTabOne()
     {
-        string test = "Hello World!";
-
         //Creates label
         GUILayout.Label("Test GUI", EditorStyles.boldLabel);
         //Creates editable text field
-        test = EditorGUILayout.TextField("Text Field", test);
+        m_textField_tab1 = EditorGUILayout.TextField("Text Field", m_textField_tab1);
     }
 
     //Tab 2
     private void DisplayTabTwo()
     {
-        //Creates lable
-        GUILayout.Label("Characters", EditorStyles.boldLabel);
+        //Creates label
+        GUILayout.Label("Properties", EditorStyles.boldLabel);
+
+        //Draws and gets the "Name" text field
+        m_charName_tab2 = EditorGUILayout.TextField("Name", m_charName_tab2);
 
         //Creates and checks if button is pressed
         if (GUILayout.Button("Create Character"))
         {
             //Debug messages to show if button is pressed
             Debug.Log("Editor Button Pressed");
+
+            //Gets the prefab
+            Object prefab = AssetDatabase.LoadAssetAtPath(m_charPrefabPath, typeof(GameObject));
+            //Creates the prefab in the scene
+            Object obj = PrefabUtility.InstantiatePrefab(prefab);
+
+            //Names the object using data from the "Name" text field
+            obj.name = m_charName_tab2;
         }
     }
 }
