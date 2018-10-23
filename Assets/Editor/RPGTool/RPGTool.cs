@@ -14,8 +14,8 @@ public class RPGTool : EditorWindow {
     //Int to hold the selected value on tab 2
     private int m_selectedRadio_tab2 = 0;
 
-    //Private const string m_charPrefabPath = "Assets/RPG Tool Assets/prefabs/character.prefab";
-    private const string m_charPrefabPath = "Assets/Editor/RPG Tool Assets/prefabs/character.prefab";
+    //Path to prefab
+    private const string m_charPrefabPath = "Assets/RPGTool/prefabs/character.prefab";
 
     //Strings to hold the values when changing tabs
     private string m_textField_tab1 = "";
@@ -100,9 +100,12 @@ public class RPGTool : EditorWindow {
             switch (m_selectedRadio_tab2)
             {
                 case 0:
-                    
+                    //Adds the "AddingTest" script to the object
+                    obj.AddComponent<AddingTest>();
+                    Debug.Log("Adding Component");
                     break;
                 case 1:
+                    Debug.Log("Not Adding Component");
                     break;
             }
         }
