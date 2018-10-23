@@ -21,15 +21,32 @@ public class RPGTool : EditorWindow {
     private string m_textField_tab1 = "";
     private string m_charName_tab2 = "";
 
+    private bool m_dragginObject_tab3 = false;
+
+    private SceneView sceneWindow;
+
+    private void OnEnable()
+    {
+        //Gets the scene window
+        sceneWindow = (SceneView)GetWindow(typeof(SceneView), true, "SceneView");
+    }
+
     //Adds button to unitys window dropdown to open the following windows
     [MenuItem("Window/RPG Tool")]
     public static void ShowWindow()
     {
         //Opens the window
         EditorWindow mainWindow = EditorWindow.GetWindow(typeof(RPGTool));
+    }
 
-        //Opens the character window in the same window as a tab
-        //EditorWindow characterWindow = EditorWindow.GetWindow<RPGCharacterWindow>("Character", typeof(RPGTool));
+    private void OnInspectorUpdate()
+    {
+        if (mouseOverWindow == sceneWindow)
+        {
+            Debug.Log("Mouse over scene view");
+            Debug.Log("Dragging: " + m_dragginObject_tab3);
+
+        }
     }
 
     private void OnGUI()
@@ -166,11 +183,10 @@ public class RPGTool : EditorWindow {
 
             //Checks if the mouse is down on the 
             case EventType.MouseDown:
-               
-
                 if (drag_area.Contains(evt.mousePosition))
                 {
                     Debug.Log("New drag");
+                    m_dragginObject_tab3 = true;
                 }
                 break;
         }
