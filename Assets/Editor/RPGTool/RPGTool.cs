@@ -29,6 +29,19 @@ public class RPGTool : EditorWindow {
     {
         //Gets the scene window
         sceneWindow = (SceneView)GetWindow(typeof(SceneView), true, "SceneView");
+
+        SceneView.onSceneGUIDelegate += SceneGUI;
+    }
+
+    //Handels events in the scene window
+    private static void SceneGUI(SceneView sceneView)
+    {
+        //Debug.Log(Event.current.type);
+
+        if (Event.current.type == EventType.Used)
+        {
+            Debug.Log("Mouse Up in scene window");
+        }
     }
 
     //Adds button to unitys window dropdown to open the following windows
@@ -37,16 +50,6 @@ public class RPGTool : EditorWindow {
     {
         //Opens the window
         EditorWindow mainWindow = EditorWindow.GetWindow(typeof(RPGTool));
-    }
-
-    private void OnInspectorUpdate()
-    {
-        if (mouseOverWindow == sceneWindow)
-        {
-            Debug.Log("Mouse over scene view");
-            Debug.Log("Dragging: " + m_dragginObject_tab3);
-
-        }
     }
 
     private void OnGUI()
