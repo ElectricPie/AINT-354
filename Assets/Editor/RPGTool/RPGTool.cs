@@ -47,6 +47,9 @@ public class RPGTool : EditorWindow {
             case 1:
                 DisplayTabTwo();
                 break;
+            case 2:
+                DisplayTabThree();
+                break;
         }
 
         //Checks if a tab is changed
@@ -108,6 +111,68 @@ public class RPGTool : EditorWindow {
                     Debug.Log("Not Adding Component");
                     break;
             }
+        }
+    }
+
+    private void DisplayTabThree()
+    {
+        //------
+        //Code copyed from: https://gist.github.com/bzgeb/3800350
+
+        //Gets events
+        Event evt = Event.current;
+
+        //Creates area to drop objects
+        Rect drop_area = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
+        GUI.Box(drop_area, "Add Trigger");
+
+        //Check if a drag event is happening
+        switch (evt.type)
+        {
+            
+            case EventType.DragUpdated:
+            case EventType.DragPerform:
+                
+                //Does nothing if the mouse isnt in the drop area
+                if (!drop_area.Contains(evt.mousePosition))
+                    return;
+
+                //Displays the mouse icon when an object is dragged on top
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+
+                
+                if (evt.type == EventType.DragPerform)
+                {
+                    DragAndDrop.AcceptDrag();
+
+                    foreach (Object dragged_object in DragAndDrop.objectReferences)
+                    {
+                        // Do On Drag Stuff here
+                        Debug.Log("Added");
+                    }
+                }
+
+                break;
+        }
+        //End Copy
+        //------
+
+        //Creates area to drop objects
+        Rect drag_area = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
+        GUI.Box(drag_area, "Object");
+
+        switch (evt.type)
+        {
+
+            //Checks if the mouse is down on the 
+            case EventType.MouseDown:
+               
+
+                if (drag_area.Contains(evt.mousePosition))
+                {
+                    Debug.Log("New drag");
+                }
+                break;
         }
     }
 }
