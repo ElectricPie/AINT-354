@@ -11,8 +11,13 @@ using UnityEditor;
 public class RPGTool : EditorWindow {
     private int m_currentTab;
 
-    //private const string m_charPrefabPath = "Assets/RPG Tool Assets/prefabs/character.prefab";
+    //Int to hold the selected value on tab 2
+    private int m_selectedRadio_tab2 = 0;
+
+    //Private const string m_charPrefabPath = "Assets/RPG Tool Assets/prefabs/character.prefab";
     private const string m_charPrefabPath = "Assets/Editor/RPG Tool Assets/prefabs/character.prefab";
+
+    //Strings to hold the values when changing tabs
     private string m_textField_tab1 = "";
     private string m_charName_tab2 = "";
 
@@ -67,8 +72,16 @@ public class RPGTool : EditorWindow {
         //Creates label
         GUILayout.Label("Properties", EditorStyles.boldLabel);
 
+
         //Draws and gets the "Name" text field
         m_charName_tab2 = EditorGUILayout.TextField("Name", m_charName_tab2);
+
+
+        //Draws label
+        GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
+
+        //Draws radio buttons and gets value
+        m_selectedRadio_tab2 = GUILayout.SelectionGrid(m_selectedRadio_tab2, new string[] { "Yes", "No" }, 2);
 
         //Creates and checks if button is pressed
         if (GUILayout.Button("Create Character"))
@@ -79,10 +92,19 @@ public class RPGTool : EditorWindow {
             //Gets the prefab
             Object prefab = AssetDatabase.LoadAssetAtPath(m_charPrefabPath, typeof(GameObject));
             //Creates the prefab in the scene
-            Object obj = PrefabUtility.InstantiatePrefab(prefab);
+            GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
 
             //Names the object using data from the "Name" text field
             obj.name = m_charName_tab2;
+
+            switch (m_selectedRadio_tab2)
+            {
+                case 0:
+                    
+                    break;
+                case 1:
+                    break;
+            }
         }
     }
 }
