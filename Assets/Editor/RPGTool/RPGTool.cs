@@ -21,7 +21,7 @@ public class RPGTool : EditorWindow {
     private string m_textField_tab1 = "";
     private string m_charName_tab2 = "";
 
-    private bool m_dragginObject_tab3 = false;
+    private static bool m_dragginObject_tab3 = false;
 
     private SceneView sceneWindow;
 
@@ -36,12 +36,8 @@ public class RPGTool : EditorWindow {
     //Handels events in the scene window
     private static void SceneGUI(SceneView sceneView)
     {
-        //Debug.Log(Event.current.type);
+        Event sceneEvent = Event.current;
 
-        if (Event.current.type == EventType.Used)
-        {
-            Debug.Log("Mouse Up in scene window");
-        }
     }
 
     //Adds button to unitys window dropdown to open the following windows
@@ -149,10 +145,10 @@ public class RPGTool : EditorWindow {
         //Check if a drag event is happening
         switch (evt.type)
         {
-            
+
             case EventType.DragUpdated:
             case EventType.DragPerform:
-                
+
                 //Does nothing if the mouse isnt in the drop area
                 if (!drop_area.Contains(evt.mousePosition))
                     return;
@@ -160,7 +156,7 @@ public class RPGTool : EditorWindow {
                 //Displays the mouse icon when an object is dragged on top
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
 
-                
+
                 if (evt.type == EventType.DragPerform)
                 {
                     DragAndDrop.AcceptDrag();
@@ -176,22 +172,5 @@ public class RPGTool : EditorWindow {
         }
         //End Copy
         //------
-
-        //Creates area to drop objects
-        Rect drag_area = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
-        GUI.Box(drag_area, "Object");
-
-        switch (evt.type)
-        {
-
-            //Checks if the mouse is down on the 
-            case EventType.MouseDown:
-                if (drag_area.Contains(evt.mousePosition))
-                {
-                    Debug.Log("New drag");
-                    m_dragginObject_tab3 = true;
-                }
-                break;
-        }
     }
 }
