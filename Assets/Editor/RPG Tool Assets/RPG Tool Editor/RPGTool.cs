@@ -11,7 +11,8 @@ using UnityEditor;
 public class RPGTool : EditorWindow {
     private int m_currentTab;
 
-    private const string m_charPrefabPath = "Assets/RPG Tool Assets/prefabs/character.prefab";
+    //private const string m_charPrefabPath = "Assets/RPG Tool Assets/prefabs/character.prefab";
+    private const string m_charPrefabPath = "Assets/Editor/RPG Tool Assets/prefabs/character.prefab";
     private string m_textField_tab1 = "";
     private string m_charName_tab2 = "";
 
