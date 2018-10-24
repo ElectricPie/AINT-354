@@ -91,10 +91,8 @@ public class RPGTool : EditorWindow {
         //Creates label
         GUILayout.Label("Properties", EditorStyles.boldLabel);
 
-
         //Draws and gets the "Name" text field
         m_charName_tab2 = EditorGUILayout.TextField("Name", m_charName_tab2);
-
 
         //Draws label
         GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
@@ -105,28 +103,8 @@ public class RPGTool : EditorWindow {
         //Creates and checks if button is pressed
         if (GUILayout.Button("Create Character"))
         {
-            //Debug messages to show if button is pressed
-            Debug.Log("Editor Button Pressed");
-
-            //Gets the prefab
-            Object prefab = AssetDatabase.LoadAssetAtPath(m_charPrefabPath, typeof(GameObject));
-            //Creates the prefab in the scene
-            GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
-
-            //Names the object using data from the "Name" text field
-            obj.name = m_charName_tab2;
-
-            switch (m_selectedRadio_tab2)
-            {
-                case 0:
-                    //Adds the "AddingTest" script to the object
-                    obj.AddComponent<AddingTest>();
-                    Debug.Log("Adding Component");
-                    break;
-                case 1:
-                    Debug.Log("Not Adding Component");
-                    break;
-            }
+            CreateCharBtnTab2();
+            
         }
     }
 
@@ -173,4 +151,40 @@ public class RPGTool : EditorWindow {
         //End Copy
         //------
     }
+
+    //----Tab 2 Methods----
+    private void CreateCharBtnTab2()
+    {
+        //Debug messages to show if button is presseda
+        Debug.Log("Editor Button Pressed");
+
+        GameObject charPrefab = CreateObject(m_charPrefabPath);
+
+        //Names the object using data from the "Name" text field
+        charPrefab.name = m_charName_tab2;
+
+        switch (m_selectedRadio_tab2)
+        {
+            case 0:
+                //Adds the "AddingTest" script to the object
+                charPrefab.AddComponent<AddingTest>();
+                Debug.Log("Adding Component");
+                break;
+            case 1:
+                Debug.Log("Not Adding Component");
+                break;
+        }
+    }
+
+    private GameObject CreateObject(string objPath)
+    {
+        //Gets the prefab
+        Object prefab = AssetDatabase.LoadAssetAtPath(objPath, typeof(GameObject));
+        //Creates the prefab in the scene
+        GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+
+        return obj;
+    }
+
+    //----Tab 2 End----
 }
