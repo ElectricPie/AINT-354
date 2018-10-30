@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveCommand : ICommand
+public class KeyboardMovementCommands : ICommand
 {
     private Rigidbody m_rigidbody;
 
-    public MoveCommand(GameObject obj)
+    public KeyboardMovementCommands(GameObject obj)
     {
         Obj = obj;
         m_rigidbody = Obj.GetComponent<Rigidbody>();
