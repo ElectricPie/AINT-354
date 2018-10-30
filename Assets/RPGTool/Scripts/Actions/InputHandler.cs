@@ -7,6 +7,7 @@ public class InputHandler {
     private ICommand m_mouseMove;
     private ICommand m_cameraZoomIn;
     private ICommand m_cameraZoomOut;
+    private ICommand m_interact;
 
     public InputHandler(GameObject character) {
         //Instantiates commands
@@ -15,6 +16,8 @@ public class InputHandler {
 
         m_cameraZoomIn = new CameraZoomIn(character);
         m_cameraZoomOut = new CameraZoomOut(character);
+
+        m_interact = new InteractCommand(character);
     }
 
     public void HandleInput()
@@ -34,6 +37,7 @@ public class InputHandler {
         if (Input.GetAxis("Fire1") > 0)
         {
             m_mouseMove.Execute();
+            m_interact.Execute();
         }
     }
 }
