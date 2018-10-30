@@ -220,7 +220,7 @@ Prefab:
     - target: {fileID: 54006769495297972, guid: e63249cbb27368544b5724698bb0cb84,
         type: 2}
       propertyPath: m_Constraints
-      value: 80
+      value: 84
       objectReference: {fileID: 0}
     - target: {fileID: 114599752391514886, guid: e63249cbb27368544b5724698bb0cb84,
         type: 2}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 1386968601}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: TraversableGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

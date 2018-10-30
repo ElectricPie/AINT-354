@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class InputHandler {
     private ICommand m_keyboardMove;
+    private ICommand m_mouseMove;
     private ICommand m_cameraZoomIn;
     private ICommand m_cameraZoomOut;
 
     public InputHandler(GameObject character) {
         //Instantiates commands
         m_keyboardMove = new KeyboardMovementCommands(character);
+        m_mouseMove = new MouseMovementCommands(character);
+
         m_cameraZoomIn = new CameraZoomIn(character);
         m_cameraZoomOut = new CameraZoomOut(character);
     }
@@ -26,6 +29,11 @@ public class InputHandler {
         if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             m_cameraZoomOut.Execute();
+        }
+
+        if (Input.GetAxis("Fire1") > 0)
+        {
+            m_mouseMove.Execute();
         }
     }
 }
