@@ -28,9 +28,7 @@ public class RPGTool : EditorWindow {
         //SceneView.onSceneGUIDelegate += SceneGUI;
 
         //Gets tabs
-        m_tabs = new Tab[1];
-        m_tabs[0] = new CharacterTab();
-        
+        m_tabs = new Tab[2] { new GeneralTab() ,new CharacterTab() };
     }
 
     //Handels events in the scene window
@@ -58,10 +56,10 @@ public class RPGTool : EditorWindow {
         switch (m_currentTab)
         {
             case 0:
-                DisplayTabOne();
+                m_tabs[0].DisplayTab();
                 break;
             case 1:
-                m_tabs[0].DisplayTab();
+                m_tabs[1].DisplayTab();
                 break;
             case 2:
                 DisplayTabThree();
@@ -74,15 +72,6 @@ public class RPGTool : EditorWindow {
             //Used to prefent text fields from having the same displayed value when switching tabs
             GUI.FocusControl("");
         }
-    }
-
-    //Tab 1
-    private void DisplayTabOne()
-    {
-        //Creates label
-        GUILayout.Label("Test GUI", EditorStyles.boldLabel);
-        //Creates editable text field
-        m_textField_tab1 = EditorGUILayout.TextField("Text Field", m_textField_tab1);
     }
 
     private void DisplayTabThree()
