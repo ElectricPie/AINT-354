@@ -14,6 +14,8 @@ public class AttributesTab : Tab
     private string m_newAttributeDisc;
     private int m_newAttributeBaseValue;
 
+    private int m_tabState = 0;
+
     public AttributesTab()
     {
         m_tabName = "Attributes";
@@ -22,20 +24,41 @@ public class AttributesTab : Tab
 
     public override void DisplayTab()
     {
-        GUILayout.Label("Attributes", EditorStyles.boldLabel);
-
-        //Draws the scroll view
-        m_scrollPosition = GUILayout.BeginScrollView(m_scrollPosition, GUILayout.Width(200), GUILayout.Height(100));
-
-        for (int i = 0; i < m_attributes.Count; i++)
+        switch (m_tabState)
         {
-            Debug.Log(m_attributes[i].Name);
-            GUILayout.Label(m_attributes[i].Name);
+            case 0:
+
+
+                GUILayout.Label("Attributes", EditorStyles.boldLabel);
+
+                //Draws the scroll view
+                m_scrollPosition = GUILayout.BeginScrollView(m_scrollPosition, GUILayout.Width(200), GUILayout.Height(100));
+
+                if (GUILayout.Button("New Attribute"))
+                {
+                    m_tabState = 1;
+                }
+
+                for (int i = 0; i < m_attributes.Count; i++)
+                {
+                    Debug.Log(m_attributes[i].Name);
+                    GUILayout.Label(m_attributes[i].Name);
+                }
+
+                //Ends the scroll view
+                GUILayout.EndScrollView();
+                break;
+            case 1:
+                NewAttribute();
+                break;
         }
 
-        //Ends the scroll view
-        GUILayout.EndScrollView();
+        
+    }
 
+    //Tab state 1
+    private void NewAttribute()
+    {
         GUILayout.Label("New Attribute", EditorStyles.boldLabel);
 
         //Draws and gets the values for a new attribute
@@ -57,6 +80,13 @@ public class AttributesTab : Tab
 
             //Adds the attribute to the list of attributes
             m_attributes.Add(newAttribute);
+
+            m_tabState = 0;
+        }
+
+        if (GUILayout.Button("Cancel"))
+        {
+            m_tabState = 0;
         }
     }
 }
