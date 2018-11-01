@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attribute  {
-    private string m_name;
+public class Attribute : ScriptableObject
+{
+    public string m_name;
     private string m_sName;
     private string m_disc;
     private int m_baseValue;
     private int m_value;
 
-    public Attribute(string name, string sName, string disc, int baseValue)
+    public Attribute()
     {
-        m_name = name;
-        m_sName = sName;
-        m_disc = disc;
-        m_baseValue = baseValue;
+        m_name = "";
+        m_sName = "";
+        m_disc = "";
+        m_baseValue = 0;
         m_value = m_baseValue;
     }
 
