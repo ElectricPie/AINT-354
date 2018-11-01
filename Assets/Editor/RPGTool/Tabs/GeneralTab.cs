@@ -7,6 +7,11 @@ public class GeneralTab : Tab
 {
     private string m_text = "";
 
+    public GeneralTab()
+    {
+        m_tabName = "General";
+    }
+
     public override void DisplayTab()
     {
         //Creates label

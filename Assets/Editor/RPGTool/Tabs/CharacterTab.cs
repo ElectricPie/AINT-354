@@ -15,6 +15,11 @@ public class CharacterTab : Tab {
 
     //Int to hold the selected value on tab 2
     private int m_selectedRadio_tab2 = 0;
+
+    public CharacterTab()
+    {
+        m_tabName = "Character";
+    }
      
     public override void DisplayTab()
     {

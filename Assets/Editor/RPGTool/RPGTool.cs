@@ -50,7 +50,7 @@ public class RPGTool : EditorWindow {
         int previousTab = m_currentTab;
 
         //Creates and updates tabs
-        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { "General", "Character", "Attributes", "Test 3"});
+        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { m_tabs[0].TabName, m_tabs[1].TabName, m_tabs[2].TabName, "Test 3"});
 
         switch (m_currentTab)
         {
