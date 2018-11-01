@@ -23,9 +23,9 @@ public class RPGTool : EditorWindow {
     private void OnEnable()
     {
         //Gets the scene window
-        m_sceneWindow = (SceneView)GetWindow(typeof(SceneView), false, "SceneView");
+        //m_sceneWindow = (SceneView)GetWindow(typeof(SceneView), false, "SceneView");
 
-        SceneView.onSceneGUIDelegate += SceneGUI;
+        //SceneView.onSceneGUIDelegate += SceneGUI;
 
         //Gets tabs
         m_tabs = new Tab[1];

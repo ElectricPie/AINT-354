@@ -23,7 +23,6 @@ public class CharacterTab : Tab {
         //Draws and gets the "Name" text field
         m_charName = EditorGUILayout.TextField("Name", m_charName);
 
-
         //Draws label
         GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
 
@@ -33,6 +32,7 @@ public class CharacterTab : Tab {
         //Creates and checks if button is pressed
         if (GUILayout.Button("Create Character"))
         {
+            //Checks if a character is already present in the scene
             if (FindCharacter() == null)
             {
                 CreateCharBtn();
@@ -41,7 +41,6 @@ public class CharacterTab : Tab {
             {
                 Debug.LogError("Character Script Already In Scene");
             }
-
         }
     }
 
