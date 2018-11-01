@@ -28,14 +28,13 @@ public class RPGTool : EditorWindow {
         //SceneView.onSceneGUIDelegate += SceneGUI;
 
         //Gets tabs
-        m_tabs = new Tab[2] { new GeneralTab() ,new CharacterTab() };
+        m_tabs = new Tab[3] { new GeneralTab() ,new CharacterTab(), new AttributesTab() };
     }
 
     //Handels events in the scene window
     private static void SceneGUI(SceneView sceneView)
     {
         Event sceneEvent = Event.current;
-
     }
 
     //Adds button to unitys window dropdown to open the following windows
@@ -51,7 +50,7 @@ public class RPGTool : EditorWindow {
         int previousTab = m_currentTab;
 
         //Creates and updates tabs
-        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { "General", "Character", "Test 3"});
+        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { "General", "Character", "Attributes", "Test 3"});
 
         switch (m_currentTab)
         {
@@ -62,6 +61,9 @@ public class RPGTool : EditorWindow {
                 m_tabs[1].DisplayTab();
                 break;
             case 2:
+                m_tabs[2].DisplayTab();
+                break;
+            case 3:
                 DisplayTabThree();
                 break;
         }
