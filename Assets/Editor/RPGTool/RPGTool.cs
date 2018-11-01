@@ -20,6 +20,8 @@ public class RPGTool : EditorWindow {
 
     private Tab[] m_tabs;
 
+    private string[] m_tabNames;
+
     private void OnEnable()
     {
         //Gets the scene window
@@ -29,6 +31,14 @@ public class RPGTool : EditorWindow {
 
         //Gets tabs
         m_tabs = new Tab[3] { new GeneralTab() ,new CharacterTab(), new AttributesTab() };
+
+        //Gets the tabs names
+        m_tabNames = new string[m_tabs.Length];
+
+        for (int i = 0; i < m_tabNames.Length; i++)
+        {
+            m_tabNames[i] = m_tabs[i].TabName;
+        }
     }
 
     //Handels events in the scene window
@@ -50,7 +60,7 @@ public class RPGTool : EditorWindow {
         int previousTab = m_currentTab;
 
         //Creates and updates tabs
-        m_currentTab = GUILayout.Toolbar(m_currentTab, new string[] { m_tabs[0].TabName, m_tabs[1].TabName, m_tabs[2].TabName, "Test 3"});
+        m_currentTab = GUILayout.Toolbar(m_currentTab, m_tabNames);//new string[] { m_tabs[0].TabName, m_tabs[1].TabName, m_tabs[2].TabName, "Test 3"});
 
         switch (m_currentTab)
         {
@@ -63,9 +73,11 @@ public class RPGTool : EditorWindow {
             case 2:
                 m_tabs[2].DisplayTab();
                 break;
+            /*
             case 3:
                 DisplayTabThree();
                 break;
+            */
         }
 
         //Checks if a tab is changed
