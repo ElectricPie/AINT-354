@@ -9,6 +9,7 @@ public class CharacterTab : Tab {
     private const string m_charPrefabPath = "Assets/RPGTool/prefabs/character.prefab";
 
     private string m_charName = "";
+    private float m_speed = 10;
 
     private GameObject m_character;
 
@@ -22,6 +23,9 @@ public class CharacterTab : Tab {
 
         //Draws and gets the "Name" text field
         m_charName = EditorGUILayout.TextField("Name", m_charName);
+
+        //Draws and gets the "Speed" slider
+        m_speed = EditorGUILayout.Slider("Speed", m_speed, 1, 10);
 
         //Draws label
         GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
@@ -53,6 +57,8 @@ public class CharacterTab : Tab {
 
         //Names the object using data from the "Name" text field
         charPrefab.name = m_charName;
+        //Sets the speed for the character
+        charPrefab.GetComponent<RPGCharacterController>().speed = m_speed;
 
         switch (m_selectedRadio_tab2)
         {
