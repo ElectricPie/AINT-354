@@ -10,9 +10,11 @@ public class CharacterTab : Tab {
 
     private string m_charName = "";
 
+    private GameObject m_character;
+
     //Int to hold the selected value on tab 2
     private int m_selectedRadio_tab2 = 0;
-
+     
     public override void DisplayTab()
     {
         //Creates label
@@ -20,6 +22,7 @@ public class CharacterTab : Tab {
 
         //Draws and gets the "Name" text field
         m_charName = EditorGUILayout.TextField("Name", m_charName);
+
 
         //Draws label
         GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
@@ -30,7 +33,14 @@ public class CharacterTab : Tab {
         //Creates and checks if button is pressed
         if (GUILayout.Button("Create Character"))
         {
-            CreateCharBtn();
+            if (FindCharacter() == null)
+            {
+                CreateCharBtn();
+            }
+            else
+            {
+                Debug.LogError("Character Script Already In Scene");
+            }
 
         }
     }
@@ -66,5 +76,11 @@ public class CharacterTab : Tab {
         GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
 
         return obj;
+    }
+
+    private Object FindCharacter()
+    {
+        //Finds the first instance with the RPGCharacterController attached to it
+        return GameObject.FindObjectOfType<RPGCharacterController>();
     }
 }
