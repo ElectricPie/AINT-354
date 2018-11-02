@@ -8,6 +8,7 @@ public class AttributesTab : Tab
     private Vector2 m_scrollPosition;
 
     private List<Attribute> m_attributes;
+    private AttributesList m_attributesList;
 
     private string m_newAttributeName;
     private string m_newAttributeSName;
@@ -26,7 +27,7 @@ public class AttributesTab : Tab
     public AttributesTab()
     {
         m_tabName = "Attributes";
-        m_attributes = new List<Attribute>();
+        m_attributesList = new AttributesList();
         m_attributeToEdit = 0;
     }
 
@@ -47,9 +48,9 @@ public class AttributesTab : Tab
                 }
 
                 //Draws all attributes in the scroll view
-                for (int i = 0; i < m_attributes.Count; i++)
+                for (int i = 0; i < m_attributesList.GetAttributes().Count; i++)
                 {
-                    if (GUILayout.Button(m_attributes[i].Name))
+                    if (GUILayout.Button(m_attributesList.GetAttributes()[i].Name))
                     {
                         m_attributeToEdit = i;
                         UpdateEditDisplay();
@@ -60,10 +61,10 @@ public class AttributesTab : Tab
                 GUILayout.EndScrollView();
 
                 //Starts displaying the edit attribute section
-                if (m_attributes.Count > 0)
+                if (m_attributesList.GetAttributes().Count > 0)
                 {
                     EditAttribute();
-                }
+                } 
                 break;
             case 1:
                 NewAttribute();
@@ -93,12 +94,9 @@ public class AttributesTab : Tab
                 BaseValue = m_newAttributeBaseValue
             };
 
-            Debug.Log("Attribute: " + CheckIfAttribute(newAttribute));
-
-            if (!CheckIfAttribute(newAttribute))
+            if (m_attributesList.CheckIfAttribute(newAttribute) == -1)
             {
-                //Adds the attribute to the list of attributes
-                m_attributes.Add(newAttribute);
+                m_attributesList.AddAttribute(newAttribute);
 
                 ResetNewAttributesTextField();
             }
@@ -119,6 +117,7 @@ public class AttributesTab : Tab
         //Sets the tabs state back to the scroll view
         m_tabState = 0;
 
+        //Resets the text fields to blank
         m_newAttributeName = "";
         m_newAttributeSName = "";
         m_newAttributeDisc = "";
@@ -130,11 +129,16 @@ public class AttributesTab : Tab
 
     private void UpdateEditDisplay()
     {
+        List<Attribute> attributeList = m_attributesList.GetAttributes();
+
         //Updates the edit section with the needed attributes data
-        m_editAttributeName = m_attributes[m_attributeToEdit].Name;
-        m_editAttributeSName = m_attributes[m_attributeToEdit].ShortName;
-        m_editAttributeDisc = m_attributes[m_attributeToEdit].Disc;
-        m_editAttributeBaseValue = m_attributes[m_attributeToEdit].BaseValue;
+        m_editAttributeName = attributeList[m_attributeToEdit].Name;
+        m_editAttributeSName = attributeList[m_attributeToEdit].ShortName;
+        m_editAttributeDisc = attributeList[m_attributeToEdit].Disc;
+        m_editAttributeBaseValue = attributeList[m_attributeToEdit].BaseValue;
+
+        //Pulls foucs away allowing values to reset
+        GUI.FocusControl("");
     }
 
     private void EditAttribute()
@@ -150,24 +154,10 @@ public class AttributesTab : Tab
         if (GUILayout.Button("Edit Attribute"))
         {
             //Sets the new edited values
-            m_attributes[m_attributeToEdit].Name = m_editAttributeName;
-            m_attributes[m_attributeToEdit].ShortName = m_editAttributeSName;
-            m_attributes[m_attributeToEdit].Disc = m_editAttributeDisc;
-            m_attributes[m_attributeToEdit].BaseValue = m_editAttributeBaseValue;
-
+            m_attributesList.ChangeAttributeName(m_attributeToEdit, m_editAttributeName);
+            m_attributesList.ChangeAttributeSName(m_attributeToEdit, m_editAttributeSName);
+            m_attributesList.ChangeAttributeDisc(m_attributeToEdit, m_editAttributeDisc);
+            m_attributesList.ChangeAttributeBaseValue(m_attributeToEdit, m_editAttributeBaseValue);
         }
-    }
-
-    private bool CheckIfAttribute(Attribute attribute)
-    {
-        for (int i = 0; i < m_attributes.Count; i++)
-        {
-            if (m_attributes[i].Name == attribute.Name)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
