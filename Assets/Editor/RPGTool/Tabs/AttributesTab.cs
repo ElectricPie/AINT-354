@@ -93,10 +93,19 @@ public class AttributesTab : Tab
                 BaseValue = m_newAttributeBaseValue
             };
 
-            //Adds the attribute to the list of attributes
-            m_attributes.Add(newAttribute);
+            Debug.Log("Attribute: " + CheckIfAttribute(newAttribute));
 
-            ResetNewAttributesTextField();
+            if (!CheckIfAttribute(newAttribute))
+            {
+                //Adds the attribute to the list of attributes
+                m_attributes.Add(newAttribute);
+
+                ResetNewAttributesTextField();
+            }
+            else
+            {
+                Debug.LogError("An attribute with the same name already exists");
+            }
         }
 
         if (GUILayout.Button("Cancel"))
@@ -147,5 +156,18 @@ public class AttributesTab : Tab
             m_attributes[m_attributeToEdit].BaseValue = m_editAttributeBaseValue;
 
         }
+    }
+
+    private bool CheckIfAttribute(Attribute attribute)
+    {
+        for (int i = 0; i < m_attributes.Count; i++)
+        {
+            if (m_attributes[i].Name == attribute.Name)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
