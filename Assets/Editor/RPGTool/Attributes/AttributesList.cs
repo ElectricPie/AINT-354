@@ -17,9 +17,9 @@ public class AttributesList
         m_attributes.Add(attributeToAdd);
     }
 
-    public void RemoveAttribute(Attribute attribute)
+    public void RemoveAttribute(int index)
     {
-        m_attributes.Remove(attribute);
+        m_attributes.RemoveAt(index);
     }
 
     public int CheckIfAttribute(Attribute attribute)

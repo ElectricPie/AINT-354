@@ -7,7 +7,6 @@ public class AttributesTab : Tab
 {
     private Vector2 m_scrollPosition;
 
-    private List<Attribute> m_attributes;
     private AttributesList m_attributesList;
 
     private string m_newAttributeName;
@@ -94,6 +93,7 @@ public class AttributesTab : Tab
                 BaseValue = m_newAttributeBaseValue
             };
 
+            //Check if an attribute with the same name exists already
             if (m_attributesList.CheckIfAttribute(newAttribute) == -1)
             {
                 m_attributesList.AddAttribute(newAttribute);
@@ -106,6 +106,7 @@ public class AttributesTab : Tab
             }
         }
 
+        //Draws the cancel button
         if (GUILayout.Button("Cancel"))
         {
             ResetNewAttributesTextField();
@@ -151,6 +152,7 @@ public class AttributesTab : Tab
         m_editAttributeDisc = EditorGUILayout.TextField("Discription", m_newAttributeDisc);
         m_editAttributeBaseValue = EditorGUILayout.IntField("Base Value", m_newAttributeBaseValue);
 
+        //Draws the button for editing attributes
         if (GUILayout.Button("Edit Attribute"))
         {
             //Sets the new edited values
@@ -158,6 +160,12 @@ public class AttributesTab : Tab
             m_attributesList.ChangeAttributeSName(m_attributeToEdit, m_editAttributeSName);
             m_attributesList.ChangeAttributeDisc(m_attributeToEdit, m_editAttributeDisc);
             m_attributesList.ChangeAttributeBaseValue(m_attributeToEdit, m_editAttributeBaseValue);
+        }
+
+        //Draws the delete attribute button
+        if (GUILayout.Button("Delete Attribute"))
+        {
+            m_attributesList.RemoveAttribute(m_attributeToEdit);
         }
     }
 }
