@@ -8,7 +8,7 @@ public class AttributesTab : Tab
     private Vector2 m_scrollPosition;
 
     private AttributesList m_attributesList;
-
+     
     private string m_newAttributeName;
     private string m_newAttributeSName;
     private string m_newAttributeDisc;
@@ -23,10 +23,15 @@ public class AttributesTab : Tab
 
     private int m_attributeToEdit;
 
+    private SaveLoadAttributes m_attributeStore;
+
     public AttributesTab()
     {
         m_tabName = "Attributes";
-        m_attributesList = new AttributesList();
+        m_attributeStore = new SaveLoadAttributes();
+
+        m_attributesList = m_attributeStore.Load();
+         
         m_attributeToEdit = 0;
     }
 
@@ -98,6 +103,8 @@ public class AttributesTab : Tab
             {
                 m_attributesList.AddAttribute(newAttribute);
 
+                m_attributeStore.Save(m_attributesList);
+                 
                 ResetNewAttributesTextField();
             }
             else

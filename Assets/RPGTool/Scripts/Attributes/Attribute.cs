@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attribute : ScriptableObject
+[System.Serializable]
+public class Attribute
 {
-    public string m_name;
+    private string m_name;
     private string m_sName;
     private string m_disc;
     private int m_baseValue;
