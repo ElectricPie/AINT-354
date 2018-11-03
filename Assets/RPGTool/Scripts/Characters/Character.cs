@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character {
+[RequireComponent(typeof(Rigidbody))]
+public class Character : MonoBehaviour {
     private string m_name;
     private int m_health;
     private int m_resources;
+    private float m_speed = 8;
 
     private bool m_alive;
 
@@ -45,6 +47,11 @@ public class Character {
     public int Resources
     {
         get { return m_resources; }
+    }
+
+    public float Speed
+    {
+        get { return m_speed; }
     }
 
     public bool Alive

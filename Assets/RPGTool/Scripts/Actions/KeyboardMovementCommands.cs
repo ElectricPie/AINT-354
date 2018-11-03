@@ -15,7 +15,7 @@ public class KeyboardMovementCommands : ICommand
     public void Execute()
     {
         //Get the speed from the 
-        float speed = Obj.GetComponent<RPGCharacterController>().speed;
+        float speed = Obj.GetComponent<Character>().Speed;
 
         //Moves the charater based on the axis inputs
         m_rigidbody.velocity = new Vector3(Input.GetAxis("Horizontal") * speed, 0, Input.GetAxis("Vertical") * speed);
