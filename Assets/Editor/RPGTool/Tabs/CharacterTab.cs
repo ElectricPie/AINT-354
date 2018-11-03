@@ -6,15 +6,15 @@ using UnityEditor;
 public class CharacterTab : Tab {
 
     //Path to prefab
-    private const string m_charPrefabPath = "Assets/RPGTool/prefabs/character.prefab";
+    private const string m_charPrefabPath = "Assets/RPGTool/prefabs/PlayerCharacter.prefab";
 
     private string m_charName = "";
     private float m_speed = 10;
 
-    private GameObject m_character;
+    private GameObject m_playerCharacter;
 
     //Int to hold the selected value on tab 2
-    private int m_selectedRadio_tab2 = 0;
+    private int m_selectedRadio = 0;
 
     public CharacterTab()
     {
@@ -36,7 +36,7 @@ public class CharacterTab : Tab {
         GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
 
         //Draws radio buttons and gets value
-        m_selectedRadio_tab2 = GUILayout.SelectionGrid(m_selectedRadio_tab2, new string[] { "Yes", "No" }, 2);
+        m_selectedRadio = GUILayout.SelectionGrid(m_selectedRadio, new string[] { "Yes", "No" }, 2);
         
         //Creates and checks if button is pressed
         if (GUILayout.Button("Create Character"))
@@ -61,11 +61,15 @@ public class CharacterTab : Tab {
         GameObject charPrefab = CreateObject(m_charPrefabPath);
 
         //Names the object using data from the "Name" text field
-        charPrefab.name = m_charName;
-        //Sets the speed for the character
-        charPrefab.GetComponent<RPGCharacterController>().speed = m_speed;
+        charPrefab.name = "[PC]" + m_charName;
+        //Sets the variables for the character
+        PlayerCharacter prefabController = charPrefab.GetComponent<PlayerCharacter>();
+        prefabController.Name = m_charName;
+        prefabController.Speed = m_speed;
 
-        switch (m_selectedRadio_tab2)
+        Debug.Log("Creationg Name: " + charPrefab.GetComponent<PlayerCharacter>().Name);
+
+        switch (m_selectedRadio)
         {
             case 0:
                 //Adds the "AddingTest" script to the object
@@ -91,6 +95,6 @@ public class CharacterTab : Tab {
     private Object FindCharacter()
     {
         //Finds the first instance with the RPGCharacterController attached to it
-        return GameObject.FindObjectOfType<RPGCharacterController>();
+        return GameObject.FindObjectOfType<PlayerCharacter>();
     }
 }

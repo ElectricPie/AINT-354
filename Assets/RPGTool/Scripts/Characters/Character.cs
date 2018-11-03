@@ -4,9 +4,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
+    [SerializeField]
     private string m_name;
     private int m_health;
     private int m_resources;
+    [SerializeField]
     private float m_speed = 8;
 
     private bool m_alive;
@@ -52,6 +54,7 @@ public class Character : MonoBehaviour {
     public float Speed
     {
         get { return m_speed; }
+        set { m_speed = value; }
     }
 
     public bool Alive

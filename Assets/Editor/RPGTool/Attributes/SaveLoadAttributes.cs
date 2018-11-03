@@ -20,8 +20,6 @@ public class SaveLoadAttributes {
 
     public AttributesList Load()
     {
-        Debug.Log(m_filePath);
-
         if (File.Exists(m_filePath))
         {
             BinaryFormatter bf = new BinaryFormatter();
