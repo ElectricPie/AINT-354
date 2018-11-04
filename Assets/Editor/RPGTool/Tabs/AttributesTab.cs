@@ -167,12 +167,16 @@ public class AttributesTab : Tab
             m_attributesList.ChangeAttributeSName(m_attributeToEdit, m_editAttributeSName);
             m_attributesList.ChangeAttributeDisc(m_attributeToEdit, m_editAttributeDisc);
             m_attributesList.ChangeAttributeBaseValue(m_attributeToEdit, m_editAttributeBaseValue);
+
+            m_attributeStore.Save(m_attributesList);
         }
 
         //Draws the delete attribute button
         if (GUILayout.Button("Delete Attribute"))
         {
             m_attributesList.RemoveAttribute(m_attributeToEdit);
+
+            m_attributeStore.Save(m_attributesList);
         }
     }
 }
