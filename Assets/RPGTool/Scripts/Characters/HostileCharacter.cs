@@ -35,6 +35,8 @@ public class HostileCharacter : Character
             if (magnitudeDist < m_aggroRange * m_aggroRange)
             {
                 print("The other transform is close to me!");
+                //Movement
+                GetComponent<Rigidbody>().velocity = offset;
             }
         }
     }
