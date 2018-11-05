@@ -48,6 +48,14 @@ public class CharacterTab : Tab
             m_tabState = 1;
         }
 
+        for (int i = 0; i < m_characterList.GetPlayerCount(); i++)
+        {
+            if (GUILayout.Button(m_characterList.GetPlayerCharacter(i).Name))
+            {
+
+            }
+        }
+
         //Ends the scroll view
         GUILayout.EndScrollView();
 
@@ -62,6 +70,14 @@ public class CharacterTab : Tab
         {
             ResetAllFields();
             m_tabState = 2;
+        }
+
+        for (int i = 0; i < m_characterList.GetHostileCount(); i++)
+        {
+            if (GUILayout.Button(m_characterList.GetHostileCharacter(i).Name))
+            {
+
+            }
         }
 
         //Ends the scroll view
