@@ -5,7 +5,6 @@ using UnityEditor;
 
 public class CharacterTab : Tab
 {
-
     //Path to prefab
     private const string m_charPrefabPath = "Assets/RPGTool/prefabs/PlayerCharacter.prefab";
 
@@ -15,9 +14,9 @@ public class CharacterTab : Tab
 
     //Player character settings
     private GameObject m_playerCharacter;
-    private AnimationCurve m_levelCurve = AnimationCurve.Linear(0, 0, 10, 10);
-    private int m_minLevel;
-    private int m_maxLevel;
+    private AnimationCurve m_experienceCurve = AnimationCurve.Linear(0, 0, 10, 10);
+    private int m_level = 1;
+    private int m_maxLevel = 5;
 
     //Scroll positions
     private Vector2 m_playerScrollPosition;
@@ -25,9 +24,13 @@ public class CharacterTab : Tab
 
     private int m_tabState = 0;
 
+    private CharacterList m_characterList;
+
     public CharacterTab()
     {
         m_tabName = "Character";
+
+        m_characterList = new CharacterList();
     }
 
     public override void DisplayTab()
@@ -41,6 +44,7 @@ public class CharacterTab : Tab
         //Draws the new attribute button
         if (GUILayout.Button("New Player"))
         {
+            ResetAllFields();
             m_tabState = 1;
         }
 
@@ -56,6 +60,7 @@ public class CharacterTab : Tab
         //Draws the new attribute button
         if (GUILayout.Button("New NPC"))
         {
+            ResetAllFields();
             m_tabState = 2;
         }
 
@@ -69,6 +74,7 @@ public class CharacterTab : Tab
                 break;
             case 2:
                 General();
+                NonPlayerCharacter();
                 break;
         }       
     }
@@ -84,24 +90,56 @@ public class CharacterTab : Tab
     
     private void PlayerCharacter()
     {
-        m_minLevel = EditorGUILayout.IntField("Min Level", m_minLevel);
+        m_level = EditorGUILayout.IntField("Min Level", m_level);
         m_maxLevel = EditorGUILayout.IntField("Min Level", m_maxLevel);
 
-        //if ()
-
-        Debug.Log(m_levelCurve.Evaluate(1));
-
         //Using Curves to display levels
-        m_levelCurve = EditorGUILayout.CurveField("Level Curve", m_levelCurve, GUILayout.Height(200));
+        m_experienceCurve = EditorGUILayout.CurveField("Level Curve", m_experienceCurve, GUILayout.Height(200));
 
+        //Creates the character template
+        if (GUILayout.Button("Create Player"))
+        {
+            PlayerTemplate newPlayer = new PlayerTemplate
+            {
+                Name = m_charName,
+                Speed = m_speed,
+                Level = m_level,
+                MaxLevel = m_maxLevel,
+                ExperianceCurve = m_experienceCurve
+            };
+
+            m_characterList.AddCharacter(newPlayer);
+        }
     }
 
     private void NonPlayerCharacter()
     {
+        m_level = EditorGUILayout.IntField("Level", m_level);
 
+        //Creates the character template
+        if (GUILayout.Button("Create NPC"))
+        {
+            HostileTemplate newHostile = new HostileTemplate
+            {
+                Name = m_charName,
+                Speed = m_speed,
+                Level = m_level
+            };
+
+            m_characterList.AddCharacter(newHostile);
+        }    
     }
 
+    private void ResetAllFields()
+    {
+        m_charName = "";
+        m_speed = 1;
+        m_level = 1;
+        m_maxLevel = 5;
+        m_experienceCurve = AnimationCurve.Linear(0, 0, 10, 10);
 
+        GUI.FocusControl("");
+    }
 
 
     /*UNUSED CODE
