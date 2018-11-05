@@ -7,12 +7,12 @@ using UnityEngine;
 [System.Serializable]
 public class CharacterList  {
     private List<PlayerTemplate> m_playerCharacters;
-    private List<HostileTemplate> m_HostileCharacters;
+    private List<HostileTemplate> m_hostileCharacters;
 
     public CharacterList()
     {
         m_playerCharacters = new List<PlayerTemplate>();
-        m_HostileCharacters = new List<HostileTemplate>();
+        m_hostileCharacters = new List<HostileTemplate>();
     }
 
     public void AddCharacter(PlayerTemplate templateToAdd)
@@ -23,7 +23,7 @@ public class CharacterList  {
     //Override
     public void AddCharacter(HostileTemplate templateToAdd)
     {
-        m_HostileCharacters.Add(templateToAdd);
+        m_hostileCharacters.Add(templateToAdd);
     }
 
     public void RemovePlayerCharacter(int index)
@@ -33,7 +33,7 @@ public class CharacterList  {
 
     public void RemoveHostileCharacter(int index)
     {
-        m_HostileCharacters.RemoveAt(index);
+        m_hostileCharacters.RemoveAt(index);
     }
 
     public int CheckIfCharacter(PlayerTemplate character)
@@ -53,10 +53,10 @@ public class CharacterList  {
     //Override
     public int CheckIfCharacter(HostileTemplate character)
     {
-        for (int i = 0; i < m_HostileCharacters.Count; i++)
+        for (int i = 0; i < m_hostileCharacters.Count; i++)
         {
             //Checks if an attribute with the same name exists already
-            if (m_HostileCharacters[i].Name == character.Name)
+            if (m_hostileCharacters[i].Name == character.Name)
             {
                 return i;
             }
