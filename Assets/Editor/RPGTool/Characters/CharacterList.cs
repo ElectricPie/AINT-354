@@ -36,6 +36,26 @@ public class CharacterList  {
         m_hostileCharacters.RemoveAt(index);
     }
 
+    public PlayerTemplate GetPlayerCharacter(int index)
+    {
+        return m_playerCharacters[index];
+    }
+
+    public HostileTemplate GetHostileCharacter(int index)
+    {
+        return m_hostileCharacters[index];
+    }
+
+    public int GetPlayerCount()
+    {
+        return m_playerCharacters.Count;
+    }
+
+    public int GetHostileCount()
+    {
+        return m_hostileCharacters.Count;
+    }
+
     public int CheckIfCharacter(PlayerTemplate character)
     {
         for (int i = 0; i < m_playerCharacters.Count; i++)
