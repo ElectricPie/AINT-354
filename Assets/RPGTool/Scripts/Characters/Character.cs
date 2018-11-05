@@ -58,7 +58,7 @@ public class Character : MonoBehaviour {
         set { m_speed = value; }
     }
 
-    public float Level
+    public int Level
     {
         get { return m_level; }
         set { m_level = value; }
