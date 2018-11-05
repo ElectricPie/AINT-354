@@ -94,7 +94,7 @@ public class SaveLoadCharacters
         else
         {
             Debug.LogWarning("File not Found");
-            return new AttributesList();
+            return new CharacterList();
         }
     }
 }
