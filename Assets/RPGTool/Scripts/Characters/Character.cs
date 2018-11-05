@@ -10,6 +10,7 @@ public class Character : MonoBehaviour {
     private int m_resources;
     [SerializeField]
     private float m_speed = 8;
+    private int m_level;
 
     private bool m_alive;
 
@@ -55,6 +56,12 @@ public class Character : MonoBehaviour {
     {
         get { return m_speed; }
         set { m_speed = value; }
+    }
+
+    public float Level
+    {
+        get { return m_level; }
+        set { m_level = value; }
     }
 
     public bool Alive

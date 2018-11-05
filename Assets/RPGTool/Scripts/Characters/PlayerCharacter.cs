@@ -5,6 +5,10 @@ using UnityEngine;
 public class PlayerCharacter : Character
 {
     private InputHandler m_inputHandler;
+    private AnimationCurve m_experianceCurve;
+    private int m_minLevel;
+    private int m_maxLevel;
+    private int m_experiance;
 
     // Use this for initialization
     void Start()
