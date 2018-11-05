@@ -4,9 +4,9 @@ using UnityEngine;
 
 [System.Serializable]
 public class CharacterTemplate {
-    private string m_name;
-    private float m_speed;
-    private int m_level;
+    protected string m_name;
+    protected float m_speed;
+    protected int m_level;
 
     public string Name
     {
