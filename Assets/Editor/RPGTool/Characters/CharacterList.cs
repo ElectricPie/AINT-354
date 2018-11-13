@@ -90,13 +90,13 @@ public class SaveLoadCharacters
 {
     private CharacterList m_characterList;
 
-    private string m_filePath = Application.persistentDataPath + "/characters.txt";
+    private string m_filePath = Application.dataPath + "/characters.txt";
 
-    public void Save(AttributesList attributesList)
+    public void Save(CharacterList characterList)
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(m_filePath);
-        bf.Serialize(file, attributesList);
+        bf.Serialize(file, characterList);
         file.Close();
     }
 
