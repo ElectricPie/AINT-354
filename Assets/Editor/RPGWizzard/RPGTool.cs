@@ -64,14 +64,18 @@ public class RPGTool : EditorWindow {
 
         switch (m_currentTab)
         {
+            //Each case draws the tab and then sends it the size of the window
             case 0:
                 m_tabs[0].DisplayTab();
+                m_tabs[0].WindowSize = position;
                 break;
             case 1:
                 m_tabs[1].DisplayTab();
+                m_tabs[0].WindowSize = position;
                 break;
             case 2:
                 m_tabs[2].DisplayTab();
+                m_tabs[0].WindowSize = position;
                 break;
             /*
             case 3:
