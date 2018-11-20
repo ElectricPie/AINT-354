@@ -26,12 +26,15 @@ public class CharacterTab : Tab
         //Draws the main box and sets the width and height to adapt to the window changing size
         GUILayout.BeginArea(mainBoxRect);
 
+        float scrollHeight = mainBoxRect.height / 2 - 30;
+
+        //Draws the player characters label
+        GUI.Label(new Rect(0, 0, 200, 20), "Player Characters");
         //Creats the dimensions for the player scroll view
-        Rect playerScrollRect = new Rect(0, 0, 200, mainBoxRect.height / 2 - 10);
+        Rect playerScrollRect = new Rect(0, 20, 200, scrollHeight);
         //Draws the player characters list
         m_playerScrollPos = GUI.BeginScrollView(playerScrollRect, m_playerScrollPos, new Rect(0, 0, playerScrollRect.width - 20, numberOfChar * 20));
 
-        
         //Debug buttons to check scroll view size
         for (int i = 0; i < numberOfChar; i++)
         {
@@ -45,10 +48,13 @@ public class CharacterTab : Tab
         //Ends the player scroll view
         GUI.EndScrollView();
 
-        Rect hostileScrollRect = new Rect(0, mainBoxRect.height / 2 + 10, 200, mainBoxRect.height / 2 - 10);
+
+        //Draws the player characters label
+        GUI.Label(new Rect(0, mainBoxRect.height / 2 + 10, 200, 20), "Hostile Characters");
+
+        Rect hostileScrollRect = new Rect(0, mainBoxRect.height / 2 + 30, 200, scrollHeight);
         //Draws the player characters list
         m_hostileScrollPos = GUI.BeginScrollView(hostileScrollRect, m_hostileScrollPos, new Rect(0, 0, hostileScrollRect.width - 20, numberOfChar * 20));
-
 
         //Debug buttons to check scroll view size
         for (int i = 0; i < numberOfChar; i++)
