@@ -15,11 +15,6 @@ public class CharacterTab : Tab
 
     public override void DisplayTab()
     {
-        PlayerCharacterList();
-    }
-
-    private void PlayerCharacterList()
-    {
         GUILayout.Label("Player Character", EditorStyles.boldLabel);
 
         //Creates the dimensions for the main box
@@ -31,8 +26,8 @@ public class CharacterTab : Tab
         Rect playerScrollRect = new Rect(0, 0, 200, mainBoxRect.height / 2);
         //Draws the player characters list
         m_playerScrollPos = GUI.BeginScrollView(playerScrollRect, m_playerScrollPos, new Rect(0, 0, playerScrollRect.width - 20, 2000));
-   
-        
+
+
         //Debug buttons to check scroll view size
         for (int i = 0; i < 100; i++)
         {
@@ -42,8 +37,8 @@ public class CharacterTab : Tab
 
             }
         }
-        
 
+        //Ends the player scroll view
         GUI.EndScrollView();
 
         //Ends the main box
