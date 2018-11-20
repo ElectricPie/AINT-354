@@ -8,6 +8,9 @@ public class CharacterTab : Tab
     //Player character 
     private Vector2 m_playerScrollPos;
 
+    //Hostile character 
+    private Vector2 m_hostileScrollPos;
+
     //General
     private int numberOfChar = 20;
 
@@ -26,7 +29,7 @@ public class CharacterTab : Tab
         GUILayout.BeginArea(mainBoxRect);
 
         //Creats the dimensions for the player scroll view
-        Rect playerScrollRect = new Rect(0, 0, 200, mainBoxRect.height / 2);
+        Rect playerScrollRect = new Rect(0, 0, 200, mainBoxRect.height / 2 - 10);
         //Draws the player characters list
         m_playerScrollPos = GUI.BeginScrollView(playerScrollRect, m_playerScrollPos, new Rect(0, 0, playerScrollRect.width - 20, numberOfChar * 20));
 
@@ -36,6 +39,24 @@ public class CharacterTab : Tab
         {
             //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
             if (GUI.Button(new Rect(0, i * 20, playerScrollRect.width - 20, 20), "New Player [" + i + "]"))
+            {
+
+            }
+        }
+
+        //Ends the player scroll view
+        GUI.EndScrollView();
+
+        Rect m_hostileScrollRect = new Rect(0, mainBoxRect.height / 2 + 10, 200, mainBoxRect.height / 2 - 10);
+        //Draws the player characters list
+        m_hostileScrollPos = GUI.BeginScrollView(m_hostileScrollRect, m_hostileScrollPos, new Rect(0, 0, m_hostileScrollRect.width - 20, numberOfChar * 20));
+
+
+        //Debug buttons to check scroll view size
+        for (int i = 0; i < numberOfChar; i++)
+        {
+            //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
+            if (GUI.Button(new Rect(0, i * 20, m_hostileScrollRect.width - 20, 20), "New Hostile [" + i + "]"))
             {
 
             }
