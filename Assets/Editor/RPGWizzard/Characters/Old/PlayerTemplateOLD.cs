@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerTemplate : CharacterTemplate
+public class PlayerTemplateOLD : CharacterTemplate
 {
     private int m_maxLevel;
 

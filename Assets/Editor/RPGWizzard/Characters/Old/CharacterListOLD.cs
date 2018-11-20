@@ -5,7 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 [System.Serializable]
-public class CharacterList  {
+public class CharacterListOLD  {
     private List<PlayerTemplate> m_playerCharacters;
     private List<HostileTemplate> m_hostileCharacters;
 

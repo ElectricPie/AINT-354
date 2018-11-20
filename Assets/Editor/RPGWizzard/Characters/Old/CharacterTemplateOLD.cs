@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CharacterTemplate {
+public class CharacterTemplateOLD {
     protected string m_name;
     protected float m_speed;
     protected int m_level;

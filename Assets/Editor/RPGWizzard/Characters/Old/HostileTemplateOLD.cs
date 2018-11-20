@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HostileTemplate : CharacterTemplate {
+public class HostileTemplateOLD : CharacterTemplate {
     private float m_aggroRange;
 
     public float AggroRange
