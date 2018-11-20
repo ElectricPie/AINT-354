@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class CharacterTab : Tab
+public class CharacterTabOLD : Tab
 {
     //Path to prefab
     private const string m_charPrefabPath = "Assets/RPGTool/prefabs/PlayerCharacter.prefab";
