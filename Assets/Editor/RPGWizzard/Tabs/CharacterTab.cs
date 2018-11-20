@@ -21,10 +21,8 @@ public class CharacterTab : Tab
 
     public override void DisplayTab()
     {
-        GUILayout.Label("Player Character", EditorStyles.boldLabel);
-
         //Creates the dimensions for the main box
-        Rect mainBoxRect = new Rect(20, 50, m_windowSize.width - 40, m_windowSize.height - 70);
+        Rect mainBoxRect = new Rect(20, 30, m_windowSize.width - 40, m_windowSize.height - 50);
         //Draws the main box and sets the width and height to adapt to the window changing size
         GUILayout.BeginArea(mainBoxRect);
 
@@ -66,7 +64,7 @@ public class CharacterTab : Tab
         GUI.EndScrollView();
 
         //Creates the dimensions for the characters properties box
-        Rect propertiesBoxRect = new Rect(210, 0, mainBoxRect.width - 220, m_windowSize.height - 70);
+        Rect propertiesBoxRect = new Rect(210, 0, mainBoxRect.width - 220, mainBoxRect.height);
         //Drawns the properties of the character 
         GUILayout.BeginArea(propertiesBoxRect);
 
