@@ -47,16 +47,16 @@ public class CharacterTab : Tab
         //Ends the player scroll view
         GUI.EndScrollView();
 
-        Rect m_hostileScrollRect = new Rect(0, mainBoxRect.height / 2 + 10, 200, mainBoxRect.height / 2 - 10);
+        Rect hostileScrollRect = new Rect(0, mainBoxRect.height / 2 + 10, 200, mainBoxRect.height / 2 - 10);
         //Draws the player characters list
-        m_hostileScrollPos = GUI.BeginScrollView(m_hostileScrollRect, m_hostileScrollPos, new Rect(0, 0, m_hostileScrollRect.width - 20, numberOfChar * 20));
+        m_hostileScrollPos = GUI.BeginScrollView(hostileScrollRect, m_hostileScrollPos, new Rect(0, 0, hostileScrollRect.width - 20, numberOfChar * 20));
 
 
         //Debug buttons to check scroll view size
         for (int i = 0; i < numberOfChar; i++)
         {
             //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
-            if (GUI.Button(new Rect(0, i * 20, m_hostileScrollRect.width - 20, 20), "New Hostile [" + i + "]"))
+            if (GUI.Button(new Rect(0, i * 20, hostileScrollRect.width - 20, 20), "New Hostile [" + i + "]"))
             {
 
             }
@@ -64,6 +64,23 @@ public class CharacterTab : Tab
 
         //Ends the player scroll view
         GUI.EndScrollView();
+
+        //Creates the dimensions for the characters properties box
+        Rect propertiesBoxRect = new Rect(210, 0, mainBoxRect.width - 220, m_windowSize.height - 70);
+        //Drawns the properties of the character 
+        GUILayout.BeginArea(propertiesBoxRect);
+
+        //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
+        for (int i = 0; i < 100; i++)
+        {
+            if (GUI.Button(new Rect(0, i * 20, propertiesBoxRect.width, 20) , "Property"))
+            {
+
+            }
+        }
+
+        //Ends the properties box
+        GUILayout.EndArea();
 
         //Ends the main box
         GUILayout.EndArea();
