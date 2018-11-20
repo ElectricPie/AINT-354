@@ -71,11 +71,11 @@ public class RPGTool : EditorWindow {
                 break;
             case 1:
                 m_tabs[1].DisplayTab();
-                m_tabs[0].WindowSize = position;
+                m_tabs[1].WindowSize = position;
                 break;
             case 2:
                 m_tabs[2].DisplayTab();
-                m_tabs[0].WindowSize = position;
+                m_tabs[2].WindowSize = position;
                 break;
             /*
             case 3:
