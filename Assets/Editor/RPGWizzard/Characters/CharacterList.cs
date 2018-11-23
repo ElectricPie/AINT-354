@@ -37,15 +37,7 @@ public class CharacterList
         m_hostileCharacters.RemoveAt(index);
     }
 
-    public PlayerTemplate GetPlayerCharacter(int index)
-    {
-        return m_playerCharacters[index];
-    }
 
-    public HostileTemplate GetHostileCharacter(int index)
-    {
-        return m_hostileCharacters[index];
-    }
 
     public int GetPlayerCount()
     {
@@ -84,6 +76,38 @@ public class CharacterList
         }
 
         return -1;
+    }
+
+    public CharacterTemplate[] GetPlayersAsArray()
+    {
+        CharacterTemplate[] array = new CharacterTemplate[m_playerCharacters.Count];
+        for (int i = 0; i < m_playerCharacters.Count; i++)
+        {
+            array[i] = m_playerCharacters[i];
+        }
+
+        return array;
+    }
+
+    public CharacterTemplate[] GetHostilesAsArray()
+    {
+        CharacterTemplate[] array = new CharacterTemplate[m_hostileCharacters.Count];
+        for (int i = 0; i < m_hostileCharacters.Count; i++)
+        {
+            array[i] = m_hostileCharacters[i];
+        }
+
+        return array;
+    }
+
+    public List<PlayerTemplate> PlayerCharacters
+    {
+        get { return m_playerCharacters; }
+    }
+
+    public List<HostileTemplate> HostileCharacters
+    {
+        get { return m_hostileCharacters; }
     }
 }
 

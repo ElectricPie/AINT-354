@@ -12,11 +12,16 @@ public class CharacterTab : Tab
     private Vector2 m_hostileScrollPos;
 
     //General
-    private int numberOfChar = 20;
+    public int characterListTab = 0;
+    private int m_numberOfChar = 20;
+
+    private CharacterList m_characters;
 
     public CharacterTab()
     {
         m_tabName = "Characters";
+
+        m_characters = new CharacterList();
     }
 
     public override void DisplayTab()
@@ -29,59 +34,44 @@ public class CharacterTab : Tab
         float scrollHeight = mainBoxRect.height / 2 - 30;
 
         //Draws the UI
-        DrawPlayerList(scrollHeight);
-
-        DrawHostileList(scrollHeight, mainBoxRect);
-
+        //Changes which list of characters is displayed.
+        characterListTab = GUI.Toolbar(new Rect(0, 0, 200, 20), characterListTab, new string[] { "Player", "Hostile" });
+        if (characterListTab == 0)
+        {
+            DrawCharacterList(mainBoxRect, m_characters.GetPlayersAsArray());
+        }
+        else
+        {
+            DrawCharacterList(mainBoxRect, m_characters.GetHostilesAsArray());
+        }
+        //Draws the properties box
         DrawPropertiesBox(mainBoxRect);
 
         //Ends the main box
         GUILayout.EndArea();
     }
 
-    private void DrawPlayerList(float scrollHeight)
+    private void DrawCharacterList(Rect mainBoxRect, CharacterTemplate[] characters)
     {
-        //Draws the player characters label
-        GUI.Label(new Rect(0, 0, 200, 20), "Player Characters");
         //Creats the dimensions for the player scroll view
-        Rect playerScrollRect = new Rect(0, 20, 200, scrollHeight);
+        Rect playerScrollRect = new Rect(0, 22, 200, mainBoxRect.height - 22);
         //Draws the player characters list
-        m_playerScrollPos = GUI.BeginScrollView(playerScrollRect, m_playerScrollPos, new Rect(0, 0, playerScrollRect.width - 20, numberOfChar * 20));
+        m_playerScrollPos = GUI.BeginScrollView(playerScrollRect, m_playerScrollPos, new Rect(0, 0, playerScrollRect.width - 20, m_characters.GetPlayerCount() * 20));
+
+        if (GUI.Button(new Rect(0, 0, playerScrollRect.width - 20, 20), "New Character")) {
+            
+        }
 
         //Debug buttons to check scroll view size
-        for (int i = 0; i < numberOfChar; i++)
+        for (int i = 0; i < m_characters.GetPlayerCount(); i++)
         {
             //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
-            if (GUI.Button(new Rect(0, i * 20, playerScrollRect.width - 20, 20), "New Player [" + i + "]"))
+            if (GUI.Button(new Rect(0, i * 20 + 21, playerScrollRect.width - 20, 20), "Player [" + i + "]"))
             {
 
             }
         }
 
-        //Ends the player scroll view
-        GUI.EndScrollView();
-    }
-
-    private void DrawHostileList(float scrollHeight, Rect mainBoxRect)
-    {
-        //Draws the player characters label
-        GUI.Label(new Rect(0, mainBoxRect.height / 2 + 10, 200, 20), "Hostile Characters");
-        //Creats the dimensions for the hostile scroll view
-        Rect hostileScrollRect = new Rect(0, mainBoxRect.height / 2 + 30, 200, scrollHeight);
-        //Draws the player characters list
-        m_hostileScrollPos = GUI.BeginScrollView(hostileScrollRect, m_hostileScrollPos, new Rect(0, 0, hostileScrollRect.width - 20, numberOfChar * 20));
-
-        //Debug buttons to check scroll view size
-        for (int i = 0; i < numberOfChar; i++)
-        {
-            //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
-            if (GUI.Button(new Rect(0, i * 20, hostileScrollRect.width - 20, 20), "New Hostile [" + i + "]"))
-            {
-
-            }
-        }
-
-        //Ends the player scroll view
         GUI.EndScrollView();
     }
 

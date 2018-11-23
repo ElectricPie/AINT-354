@@ -7,6 +7,7 @@ public class PlayerTemplate : CharacterTemplate
 {
     private int m_maxLevel;
 
+    /*
     private AnimationCurve m_experienceCurve;
 
     public AnimationCurve ExperianceCurve
@@ -14,6 +15,7 @@ public class PlayerTemplate : CharacterTemplate
         get { return m_experienceCurve; }
         set { m_experienceCurve = value; }
     }
+    */
 
     public int MaxLevel
     {
