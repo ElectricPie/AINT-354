@@ -24,6 +24,15 @@ public class CharacterTab : Tab
     private string m_newCharName;
     private string m_newCharDisc;
 
+
+    //Sets the width that all tags will be
+    private float m_tagLength = 70;
+    //Sets the height that all properties will be
+    private float m_propertyHeight = 20;
+    //Sets the distance between each propertys 
+    private float m_propertyGap = 21;
+    private float m_fieldWidth;
+
     public CharacterTab()
     {
         m_tabName = "Characters";
@@ -37,6 +46,8 @@ public class CharacterTab : Tab
         m_mainBoxRect = new Rect(20, 30, m_windowSize.width - 40, m_windowSize.height - 50);
         //Draws the main box and sets the width and height to adapt to the window changing size
         GUILayout.BeginArea(m_mainBoxRect);
+        //Updates the width of the fields which change with the windows width
+        m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
 
         float scrollHeight = m_mainBoxRect.height / 2 - 30;
 
@@ -65,6 +76,7 @@ public class CharacterTab : Tab
         //Draws the player characters list
         m_playerScrollPos = GUI.BeginScrollView(m_playerScrollRect, m_playerScrollPos, new Rect(0, 0, m_playerScrollRect.width - 20, m_characters.GetPlayerCount() * 20));
 
+        if (GUI.Button(new Rect(0, 0, m_playerScrollRect.width - 20, 20), "New Character")) {
             
         }
 
@@ -96,25 +108,21 @@ public class CharacterTab : Tab
 
     private void DrawGeneralProperties()
     {
-        //Sets the width that all tags will be
-        float tagLength = 70;
-        //Sets the height that all properties will be
-        float propertyHeight = 20;
-        //Sets the distance between each propertys 
-        float propertyGap = 21;
-        //Sets the width of the fields which change with the window width
-        float fieldWidth = m_propertiesBoxRect.width - tagLength;
-
         //Name lable and field
-        GUI.Label(new Rect(0, propertyGap * 0, tagLength, propertyHeight), "Name");
-        m_newCharName = GUI.TextField(new Rect(tagLength, propertyGap * 0, fieldWidth, propertyHeight), m_newCharName);
+        GUI.Label(new Rect(0, m_propertyGap * 0, m_tagLength, m_propertyHeight), "Name");
+        m_newCharName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 0, m_fieldWidth, m_propertyHeight), m_newCharName);
 
         //Discription lable and field
-        GUI.Label(new Rect(0, propertyGap * 1, tagLength, propertyHeight), "Discription");
-        m_newCharDisc = GUI.TextArea(new Rect(tagLength, propertyGap * 1, fieldWidth, 60), m_newCharDisc);
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Discription");
+        m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, 60), m_newCharDisc);
 
         //Starting level lable and field
-        GUI.Label(new Rect(0, propertyGap * 4, tagLength, propertyHeight), "Discription");
-        m_newCharStartingLevel = EditorGUI.IntField(new Rect(tagLength, propertyGap * 4, fieldWidth, propertyHeight), m_newCharStartingLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Discription");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+    }
+
+    private void DrawPlayerProperties()
+    {
+
     }
 }
