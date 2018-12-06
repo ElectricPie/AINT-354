@@ -27,7 +27,7 @@ public class CharacterTab : Tab
 
 
     //Sets the width that all tags will be
-    private float m_tagLength = 70;
+    private float m_tagLength = 90;
     //Sets the height that all properties will be
     private float m_propertyHeight = 20;
     //Sets the distance between each propertys 
