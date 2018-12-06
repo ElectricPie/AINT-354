@@ -7,6 +7,7 @@ public class CharacterTab : Tab
 {
     //Player character 
     private Vector2 m_playerScrollPos;
+    private int m_newPlayerMaxLevel;
 
     //Hostile character 
     private Vector2 m_hostileScrollPos;
@@ -42,21 +43,26 @@ public class CharacterTab : Tab
 
     public override void DisplayTab()
     {
-        //Updates the dimensions for the main box in relations to the window
+        //Updates the dimensions of the drawing space in relations to the window
         m_mainBoxRect = new Rect(20, 30, m_windowSize.width - 40, m_windowSize.height - 50);
-        //Draws the main box and sets the width and height to adapt to the window changing size
+        //Creats the main box using the adaptable rect
         GUILayout.BeginArea(m_mainBoxRect);
-        //Updates the width of the fields which change with the windows width
+        //Updates the width of the fields which change with the main boxs width
         m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
 
+        //Calculates the height of the character scroll height so that it fits within and adapts to the main box
         float scrollHeight = m_mainBoxRect.height / 2 - 30;
 
         //Draws the UI
-        //Changes which list of characters is displayed.
+        //Creates a tool bar which is used to select what type of characters the list should show
         m_characterListTab = GUI.Toolbar(new Rect(0, 0, 200, 20), m_characterListTab, new string[] { "Player", "Hostile" });
+
+        //Draws the player/hostile list depending on the toolbar selection
         if (m_characterListTab == 0)
         {
             DrawCharacterList(m_characters.GetPlayersAsArray());
+            //Tempareraly here till new character is properly created
+            
         }
         else
         {
@@ -102,6 +108,15 @@ public class CharacterTab : Tab
 
         DrawGeneralProperties();
 
+        if (m_characterListTab == 0)
+        {
+            DrawPlayerProperties();
+        }
+        else
+        {
+
+        }
+
         //Ends the properties box
         GUILayout.EndArea();
     }
@@ -116,13 +131,17 @@ public class CharacterTab : Tab
         GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Discription");
         m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, 60), m_newCharDisc);
 
-        //Starting level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Discription");
-        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+        
     }
 
     private void DrawPlayerProperties()
     {
+        //Starting level lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Starting Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
+
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Max Level");
+        m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
     }
 }
