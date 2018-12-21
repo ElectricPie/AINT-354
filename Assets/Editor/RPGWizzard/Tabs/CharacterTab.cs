@@ -25,6 +25,8 @@ public class CharacterTab : Tab
     private string m_newCharName;
     private string m_newCharDisc;
 
+    private Vector2 m_attributeListScrollPos;
+    private List<Attribute> m_newCharAttributes;
 
     //Sets the width that all tags will be
     private float m_tagLength = 90;
@@ -111,6 +113,7 @@ public class CharacterTab : Tab
         if (m_characterListTab == 0)
         {
             DrawPlayerProperties();
+            DrawAttributesList(130);
         }
         else
         {
@@ -130,8 +133,6 @@ public class CharacterTab : Tab
         //Discription lable and field
         GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Discription");
         m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, 60), m_newCharDisc);
-
-        
     }
 
     private void DrawPlayerProperties()
@@ -140,8 +141,18 @@ public class CharacterTab : Tab
         GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Starting Level");
         m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
-
+        //Max Level lable and field
         GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Max Level");
         m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
+    }
+
+    private void DrawAttributesList(int yStart)
+    {
+        //Updates the dimensions for the attribute scroll view
+        Rect attributeScrollRect = new Rect(0, yStart, 200, m_mainBoxRect.height - 22);
+        //Draws the attribute list
+        m_attributeListScrollPos = GUI.BeginScrollView(attributeScrollRect, m_attributeListScrollPos, attributeScrollRect);
+
+        GUI.EndScrollView();
     }
 }
