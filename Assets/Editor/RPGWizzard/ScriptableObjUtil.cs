@@ -6,7 +6,15 @@ using UnityEditor;
 public class ScriptableObjUtil {
     public void CreateNewScriptableObj(ScriptableObject obj, string objName, string path)
     {
-        AssetDatabase.CreateAsset(obj, path + objName + ".asset");
-        AssetDatabase.SaveAssets();
+        //Prevents file names being blank
+        if (objName == "" | objName == null)
+        {
+            Debug.LogError("Invalid Object Name");
+        }
+        else
+        {
+            AssetDatabase.CreateAsset(obj, path + objName + ".asset");
+            AssetDatabase.SaveAssets();
+        }
     }
 }
