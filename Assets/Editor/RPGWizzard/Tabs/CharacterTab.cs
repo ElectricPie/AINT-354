@@ -16,6 +16,8 @@ public class CharacterTab : Tab
     private int m_characterListTab = 0;
     private int m_newCharStartingLevel;
 
+    private ScriptableObjUtil ScriptObjUtill;
+
     private CharacterList m_characters;
 
     private Rect m_mainBoxRect;
@@ -41,6 +43,8 @@ public class CharacterTab : Tab
         m_tabName = "Characters";
 
         m_characters = new CharacterList();
+
+        ScriptObjUtill = new ScriptableObjUtil();
     }
 
     public override void DisplayTab()
@@ -114,6 +118,21 @@ public class CharacterTab : Tab
         {
             DrawPlayerProperties();
             DrawAttributesList(130);
+
+
+            if(GUI.Button(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyGap), "Content"))
+            {
+                //Creates a scriptable object
+                ScriptablePlayer newPlayerChar = ScriptableObject.CreateInstance<ScriptablePlayer>();
+                //Assigns values to the new object 
+                newPlayerChar.name = m_newCharName;
+                newPlayerChar.discription = m_newCharDisc;
+                newPlayerChar.level = m_newCharStartingLevel;
+                newPlayerChar.maxLevel = m_newPlayerMaxLevel;
+
+                //Creates the new character as a scriptable object
+                ScriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, "Assets/RPGWizzard/Characters/Players/");
+            }
         }
         else
         {
