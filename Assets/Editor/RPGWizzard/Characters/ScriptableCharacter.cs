@@ -7,4 +7,6 @@ public class ScriptableCharacter : ScriptableObject {
     public string discription;
 
     public int level;
+
+    public AnimationCurve experanceCurve;
 }
