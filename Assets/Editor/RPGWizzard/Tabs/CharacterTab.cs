@@ -12,6 +12,8 @@ public class CharacterTab : Tab
 
     private List<ScriptablePlayer> m_playerCharacters;
 
+    private AnimationCurve m_newPlayerExpCurve;
+
     //Hostile character 
     private Vector2 m_hostileScrollPos;
 
@@ -46,6 +48,8 @@ public class CharacterTab : Tab
         ScriptObjUtill = new ScriptableObjUtil();
 
         m_playerCharacters = new List<ScriptablePlayer>();
+
+        m_newPlayerExpCurve = AnimationCurve.Linear(0, 0, 50, 50);
     }
 
     public override void DisplayTab()
@@ -134,15 +138,16 @@ public class CharacterTab : Tab
             DrawAttributesList(130);
 
 
-            if(GUI.Button(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyGap), "Content"))
+            if(GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
             {
-                //Creates a scriptable object
+                //Creates a player character scriptable object
                 ScriptablePlayer newPlayerChar = ScriptableObject.CreateInstance<ScriptablePlayer>();
-                //Assigns values to the new object 
+                //Assigns values to the new player character object 
                 newPlayerChar.name = m_newCharName;
                 newPlayerChar.discription = m_newCharDisc;
                 newPlayerChar.level = m_newCharStartingLevel;
                 newPlayerChar.maxLevel = m_newPlayerMaxLevel;
+                newPlayerChar.experanceCurve = m_newPlayerExpCurve;
 
                 //Creates the new character as a scriptable object 
                 ScriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, "Assets/RPGWizzard/Characters/Players/");
@@ -177,6 +182,10 @@ public class CharacterTab : Tab
         //Max Level lable and field
         GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Max Level");
         m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
+
+        //Experiance curve lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Exp Curve");
+        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0,0,m_newPlayerMaxLevel,50));
     }
 
     private void DrawAttributesList(int yStart)
