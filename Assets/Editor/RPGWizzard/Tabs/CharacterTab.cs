@@ -5,237 +5,237 @@ using UnityEditor;
 
 public class CharacterTab : Tab
 {
-    //Path to prefab
-    private const string m_charPrefabPath = "Assets/RPGTool/prefabs/PlayerCharacter.prefab";
+    //Player character 
+    private Vector2 m_playerScrollPos;
 
-    //General character settings
-    private string m_charName = "";
-    private float m_speed = 10;
+    private int m_newPlayerMaxLevel;
 
-    //Player character settings
-    private GameObject m_playerCharacter;
-    private AnimationCurve m_experienceCurve = AnimationCurve.Linear(0, 0, 10, 10);
-    private int m_level = 1;
-    private int m_maxLevel = 5;
+    private List<ScriptablePlayer> m_playerCharacters;
 
-    //Scroll positions
-    private Vector2 m_playerScrollPosition;
-    private Vector2 m_nonPlayerScrollPosition;
+    private AnimationCurve m_newPlayerExpCurve;
 
-    private int m_tabState = 0;
+    //Hostile character 
+    private Vector2 m_hostileScrollPos;
 
-    private CharacterList m_characterList;
+    private int m_newHostileAggroRange;
+
+    private List<ScriptableHostile> m_hostileCharacters;
+
+    //General
+    private int m_characterListTab = 0;
+    private int m_newCharStartingLevel;
+
+    private ScriptableObjUtil ScriptObjUtill;
+
+    private Rect m_mainBoxRect;
+    private Rect m_playerScrollRect;
+    private Rect m_propertiesBoxRect;
+
+    private string m_newCharName;
+    private string m_newCharDisc;
+
+    private Vector2 m_attributeListScrollPos;
+    private List<Attribute> m_newCharAttributes;
+
+    //Sets the width that all tags will be
+    private float m_tagLength = 90;
+    //Sets the height that all properties will be
+    private float m_propertyHeight = 20;
+    //Sets the distance between each propertys 
+    private float m_propertyGap = 21;
+    private float m_fieldWidth;
 
     public CharacterTab()
     {
-        m_tabName = "Character";
+        m_tabName = "Characters";
 
-        m_characterList = new CharacterList();
+        ScriptObjUtill = new ScriptableObjUtil();
+
+        m_playerCharacters = new List<ScriptablePlayer>();
+        m_hostileCharacters = new List<ScriptableHostile>();
+
+        m_newPlayerExpCurve = AnimationCurve.Linear(0, 0, 50, 50);
     }
 
     public override void DisplayTab()
     {
-        //Player Characters
-        GUILayout.Label("Player Characters", EditorStyles.boldLabel);
+        //Updates the dimensions of the drawing space in relations to the window
+        m_mainBoxRect = new Rect(20, 30, m_windowSize.width - 40, m_windowSize.height - 50);
+        //Creats the main box using the adaptable rect
+        GUILayout.BeginArea(m_mainBoxRect);
+        //Updates the width of the fields which change with the main boxs width
+        m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
 
-        //Draws the scroll view
-        m_playerScrollPosition = GUILayout.BeginScrollView(m_playerScrollPosition, GUILayout.Width(200), GUILayout.Height(100));
+        //Calculates the height of the character scroll height so that it fits within and adapts to the main box
+        float scrollHeight = m_mainBoxRect.height / 2 - 30;
 
-        //Draws the new attribute button
-        if (GUILayout.Button("New Player"))
+        //Draws the UI
+        //Creates a tool bar which is used to select what type of characters the list should show
+        m_characterListTab = GUI.Toolbar(new Rect(0, 0, 200, 20), m_characterListTab, new string[] { "Player", "Hostile" });
+
+        //Draws the player/hostile list depending on the toolbar selection
+        if (m_characterListTab == 0)
         {
-            ResetAllFields();
-            m_tabState = 1;
+            DrawCharacterList(GetCharacterNames(m_playerCharacters));
+        }
+        else
+        {
+            DrawCharacterList(GetCharacterNames(m_hostileCharacters));
+        }
+        //Draws the properties box
+        DrawPropertiesBox();
+
+        //Ends the main box
+        GUILayout.EndArea();
+    }
+
+    private List<string> GetCharacterNames(List<ScriptablePlayer> characters)
+    {
+        List<string> names = new List<string>();
+
+        //Creates a list of names from the characters
+        for (int i = 0; i < characters.Count; i++)
+        {
+            names[i] = characters[i].name;
         }
 
-        for (int i = 0; i < m_characterList.GetPlayerCount(); i++)
+        return names;
+    }
+
+    //Override for above
+    private List<string> GetCharacterNames(List<ScriptableHostile> characters)
+    {
+        List<string> names = new List<string>();
+
+        //Creates a list of names from the characters
+        for (int i = 0; i < characters.Count; i++)
         {
-            if (GUILayout.Button(m_characterList.GetPlayerCharacter(i).Name))
+            names[i] = characters[i].name;
+        }
+
+        return names;
+    }
+
+    private void DrawCharacterList(List<string> names)
+    {
+        //Updates the dimensions for the player scroll view
+        m_playerScrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 22);
+        //Draws the player characters list
+        m_playerScrollPos = GUI.BeginScrollView(m_playerScrollRect, m_playerScrollPos, new Rect(0, 0, m_playerScrollRect.width - 20, names.Count * 20));
+
+        if (GUI.Button(new Rect(0, 0, m_playerScrollRect.width - 20, 20), "New Character")) {
+            
+        }
+
+        //Debug buttons to check scroll view size
+        for (int i = 0; i < names.Count; i++)
+        {
+            //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
+            if (GUI.Button(new Rect(0, i * 20 + 21, m_playerScrollRect.width - 20, 20), "Player [" + i + "]"))
             {
 
             }
         }
 
-        //Ends the scroll view
-        GUILayout.EndScrollView();
+        GUI.EndScrollView();
+    }
 
-        //NPC
-        GUILayout.Label("NPCs", EditorStyles.boldLabel);
+    private void DrawPropertiesBox()
+    {
+        //Creates the dimensions for the characters properties box
+        m_propertiesBoxRect = new Rect(210, 0, m_mainBoxRect.width - 220, m_mainBoxRect.height);
+        //Drawns the properties of the character 
+        GUILayout.BeginArea(m_propertiesBoxRect);
 
-        //Draws the scroll view
-        m_nonPlayerScrollPosition = GUILayout.BeginScrollView(m_nonPlayerScrollPosition, GUILayout.Width(200), GUILayout.Height(100));
+        DrawGeneralProperties();
 
-        //Draws the new attribute button
-        if (GUILayout.Button("New NPC"))
+        if (m_characterListTab == 0)
         {
-            ResetAllFields();
-            m_tabState = 2;
-        }
+            DrawPlayerProperties();
+            //DrawAttributesList(130);
 
-        for (int i = 0; i < m_characterList.GetHostileCount(); i++)
-        {
-            if (GUILayout.Button(m_characterList.GetHostileCharacter(i).Name))
+            if(GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
             {
+                //Creates a player character scriptable object
+                ScriptablePlayer newPlayerChar = ScriptableObject.CreateInstance<ScriptablePlayer>();
+                //Assigns values to the new player character object 
+                newPlayerChar.name = m_newCharName;
+                newPlayerChar.discription = m_newCharDisc;
+                newPlayerChar.level = m_newCharStartingLevel;
+                newPlayerChar.maxLevel = m_newPlayerMaxLevel;
+                newPlayerChar.experanceCurve = m_newPlayerExpCurve;
 
+                //Creates the new character as a scriptable object 
+                ScriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, "Assets/RPGWizzard/Characters/Players/");
+            }
+        }
+        else
+        {
+            DrawHostlieProperties();
+
+            if(GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+            {
+                //Creates a hostile character scriptable object
+                ScriptableHostile newHostileChar = ScriptableObject.CreateInstance<ScriptableHostile>();
+                //Assigns values to the new hostile character object 
+                newHostileChar.name = m_newCharName;
+                newHostileChar.discription = m_newCharDisc;
+                newHostileChar.level = m_newCharStartingLevel;
+                newHostileChar.aggroRange = m_newHostileAggroRange;
+
+                //Creates the new character as a scriptable object 
+                ScriptObjUtill.CreateNewScriptableObj(newHostileChar, m_newCharName, "Assets/RPGWizzard/Characters/Hostiles/");
             }
         }
 
-        //Ends the scroll view
-        GUILayout.EndScrollView();
-
-        switch(m_tabState) {
-            case 1:
-                General();
-                PlayerCharacter();
-                break;
-            case 2:
-                General();
-                NonPlayerCharacter();
-                break;
-        }       
+        //Ends the properties box
+        GUILayout.EndArea();
     }
 
-    private void General()
+    private void DrawGeneralProperties()
     {
-        //Draws and gets the "Name" text field
-        m_charName = EditorGUILayout.TextField("Name", m_charName);
+        //Name lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 0, m_tagLength, m_propertyHeight), "Name");
+        m_newCharName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 0, m_fieldWidth, m_propertyHeight), m_newCharName);
 
-        //Draws and gets the "Speed" slider
-        m_speed = EditorGUILayout.Slider("Speed", m_speed, 1, 10);
+        //Discription lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Discription");
+        m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, 60), m_newCharDisc);
     }
-    
-    private void PlayerCharacter()
+
+    private void DrawPlayerProperties()
     {
-        m_level = EditorGUILayout.IntField("Min Level", m_level);
-        m_maxLevel = EditorGUILayout.IntField("Min Level", m_maxLevel);
+        //Starting level lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Starting Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
-        //Using Curves to display levels
-        m_experienceCurve = EditorGUILayout.CurveField("Level Curve", m_experienceCurve, GUILayout.Height(200));
+        //Max Level lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Max Level");
+        m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
 
-        //Creates the character template
-        if (GUILayout.Button("Create Player"))
-        {
-            PlayerTemplate newPlayer = new PlayerTemplate
-            {
-                Name = m_charName,
-                Speed = m_speed,
-                Level = m_level,
-                MaxLevel = m_maxLevel,
-                ExperianceCurve = m_experienceCurve
-            };
-
-            m_characterList.AddCharacter(newPlayer);
-        }
+        //Experiance curve lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Exp Curve");
+        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0,0,m_newPlayerMaxLevel,50));
     }
 
-    private void NonPlayerCharacter()
+    private void DrawHostlieProperties()
     {
-        m_level = EditorGUILayout.IntField("Level", m_level);
+        //Aggro range lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
-        //Creates the character template
-        if (GUILayout.Button("Create NPC"))
-        {
-            HostileTemplate newHostile = new HostileTemplate
-            {
-                Name = m_charName,
-                Speed = m_speed,
-                Level = m_level
-            };
-
-            m_characterList.AddCharacter(newHostile);
-        }    
+        //Aggro range lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Aggro Range");
+        m_newHostileAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newHostileAggroRange);
     }
 
-    private void ResetAllFields()
+    private void DrawAttributesList(int yStart)
     {
-        m_charName = "";
-        m_speed = 1;
-        m_level = 1;
-        m_maxLevel = 5;
-        m_experienceCurve = AnimationCurve.Linear(0, 0, 10, 10);
+        //Updates the dimensions for the attribute scroll view
+        Rect attributeScrollRect = new Rect(0, yStart, 200, m_mainBoxRect.height - 22);
+        //Draws the attribute list
+        m_attributeListScrollPos = GUI.BeginScrollView(attributeScrollRect, m_attributeListScrollPos, attributeScrollRect);
 
-        GUI.FocusControl("");
+        GUI.EndScrollView();
     }
-
-
-    /*UNUSED CODE
-    private void CreateCharBtn()
-    {
-        //Debug messages to show if button is presseda
-        Debug.Log("Editor Button Pressed");
-
-        GameObject charPrefab = CreateObject(m_charPrefabPath);
-
-        //Names the object using data from the "Name" text field
-        charPrefab.name = "[PC]" + m_charName;
-        //Sets the variables for the character
-        PlayerCharacter prefabController = charPrefab.GetComponent<PlayerCharacter>();
-        prefabController.Name = m_charName;
-        prefabController.Speed = m_speed;
-
-        Debug.Log("Creationg Name: " + charPrefab.GetComponent<PlayerCharacter>().Name);
-
-        switch (m_selectedRadio)
-        {
-            case 0:
-                //Adds the "AddingTest" script to the object
-                charPrefab.AddComponent<AddingTest>();
-                Debug.Log("Adding Component");
-                break;
-            case 1:
-                Debug.Log("Not Adding Component");
-                break;
-        }
-    }
-
-    private GameObject CreateObject(string objPath)
-    {
-        //Gets the prefab
-        Object prefab = AssetDatabase.LoadAssetAtPath(objPath, typeof(GameObject));
-        //Creates the prefab in the scene
-        GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
-
-        return obj;
-    }
-
-    private Object FindCharacter()
-    {
-        //Finds the first instance with the RPGCharacterController attached to it
-        return GameObject.FindObjectOfType<PlayerCharacter>();
-    }
-
-    private void UNUSEDCODE()
-    {
-        /*
-        //Creates label
-        GUILayout.Label("Properties", EditorStyles.boldLabel);
-
-        //Draws and gets the "Name" text field
-        m_charName = EditorGUILayout.TextField("Name", m_charName);
-
-        //Draws and gets the "Speed" slider
-        m_speed = EditorGUILayout.Slider("Speed", m_speed, 1, 10);
-
-        //Draws label
-        GUILayout.Label("Add Test Script", EditorStyles.boldLabel);
-
-        //Draws radio buttons and gets value
-        m_selectedRadio = GUILayout.SelectionGrid(m_selectedRadio, new string[] { "Yes", "No" }, 2);
-
-        //Creates and checks if button is pressed
-        if (GUILayout.Button("Create Character"))
-        {
-            //Checks if a character is already present in the scene
-            if (FindCharacter() == null)
-            {
-                CreateCharBtn();
-            }
-            else
-            {
-                Debug.LogError("Character Script Already In Scene");
-            }
-        }
-        
-    }
-    */
 }
