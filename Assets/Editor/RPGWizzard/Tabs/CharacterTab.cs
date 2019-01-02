@@ -7,7 +7,10 @@ public class CharacterTab : Tab
 {
     //Player character 
     private Vector2 m_playerScrollPos;
+
     private int m_newPlayerMaxLevel;
+
+    private List<ScriptablePlayer> m_playerCharacters;
 
     //Hostile character 
     private Vector2 m_hostileScrollPos;
@@ -17,8 +20,6 @@ public class CharacterTab : Tab
     private int m_newCharStartingLevel;
 
     private ScriptableObjUtil ScriptObjUtill;
-
-    private CharacterList m_characters;
 
     private Rect m_mainBoxRect;
     private Rect m_playerScrollRect;
@@ -42,9 +43,9 @@ public class CharacterTab : Tab
     {
         m_tabName = "Characters";
 
-        m_characters = new CharacterList();
-
         ScriptObjUtill = new ScriptableObjUtil();
+
+        m_playerCharacters = new List<ScriptablePlayer>();
     }
 
     public override void DisplayTab()
@@ -66,13 +67,13 @@ public class CharacterTab : Tab
         //Draws the player/hostile list depending on the toolbar selection
         if (m_characterListTab == 0)
         {
-            DrawCharacterList(m_characters.GetPlayersAsArray());
+
             //Tempareraly here till new character is properly created
-            
+            DrawCharacterList(GetCharacterNames(m_playerCharacters));
         }
         else
         {
-            DrawCharacterList(m_characters.GetHostilesAsArray());
+            
         }
         //Draws the properties box
         DrawPropertiesBox();
@@ -81,19 +82,32 @@ public class CharacterTab : Tab
         GUILayout.EndArea();
     }
 
-    private void DrawCharacterList(CharacterTemplate[] characters)
+    private List<string> GetCharacterNames(List<ScriptablePlayer> characters)
+    {
+        List<string> names = new List<string>();
+
+        //Creates a list of names from the characters
+        for (int i = 0; i < characters.Count; i++)
+        {
+            names[i] = characters[i].name;
+        }
+
+        return names;
+    }
+
+    private void DrawCharacterList(List<string> names)
     {
         //Updates the dimensions for the player scroll view
         m_playerScrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 22);
         //Draws the player characters list
-        m_playerScrollPos = GUI.BeginScrollView(m_playerScrollRect, m_playerScrollPos, new Rect(0, 0, m_playerScrollRect.width - 20, m_characters.GetPlayerCount() * 20));
+        m_playerScrollPos = GUI.BeginScrollView(m_playerScrollRect, m_playerScrollPos, new Rect(0, 0, m_playerScrollRect.width - 20, names.Count * 20));
 
         if (GUI.Button(new Rect(0, 0, m_playerScrollRect.width - 20, 20), "New Character")) {
             
         }
 
         //Debug buttons to check scroll view size
-        for (int i = 0; i < m_characters.GetPlayerCount(); i++)
+        for (int i = 0; i < names.Count; i++)
         {
             //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
             if (GUI.Button(new Rect(0, i * 20 + 21, m_playerScrollRect.width - 20, 20), "Player [" + i + "]"))
@@ -130,7 +144,7 @@ public class CharacterTab : Tab
                 newPlayerChar.level = m_newCharStartingLevel;
                 newPlayerChar.maxLevel = m_newPlayerMaxLevel;
 
-                //Creates the new character as a scriptable object
+                //Creates the new character as a scriptable object 
                 ScriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, "Assets/RPGWizzard/Characters/Players/");
             }
         }
