@@ -17,6 +17,10 @@ public class CharacterTab : Tab
     //Hostile character 
     private Vector2 m_hostileScrollPos;
 
+    private int m_newHostileAggroRange;
+
+    private List<ScriptableHostile> m_hostileCharacters;
+
     //General
     private int m_characterListTab = 0;
     private int m_newCharStartingLevel;
@@ -48,6 +52,7 @@ public class CharacterTab : Tab
         ScriptObjUtill = new ScriptableObjUtil();
 
         m_playerCharacters = new List<ScriptablePlayer>();
+        m_hostileCharacters = new List<ScriptableHostile>();
 
         m_newPlayerExpCurve = AnimationCurve.Linear(0, 0, 50, 50);
     }
@@ -71,13 +76,11 @@ public class CharacterTab : Tab
         //Draws the player/hostile list depending on the toolbar selection
         if (m_characterListTab == 0)
         {
-
-            //Tempareraly here till new character is properly created
             DrawCharacterList(GetCharacterNames(m_playerCharacters));
         }
         else
         {
-            
+            DrawCharacterList(GetCharacterNames(m_hostileCharacters));
         }
         //Draws the properties box
         DrawPropertiesBox();
@@ -87,6 +90,20 @@ public class CharacterTab : Tab
     }
 
     private List<string> GetCharacterNames(List<ScriptablePlayer> characters)
+    {
+        List<string> names = new List<string>();
+
+        //Creates a list of names from the characters
+        for (int i = 0; i < characters.Count; i++)
+        {
+            names[i] = characters[i].name;
+        }
+
+        return names;
+    }
+
+    //Override for above
+    private List<string> GetCharacterNames(List<ScriptableHostile> characters)
     {
         List<string> names = new List<string>();
 
@@ -135,8 +152,7 @@ public class CharacterTab : Tab
         if (m_characterListTab == 0)
         {
             DrawPlayerProperties();
-            DrawAttributesList(130);
-
+            //DrawAttributesList(130);
 
             if(GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
             {
@@ -155,7 +171,21 @@ public class CharacterTab : Tab
         }
         else
         {
+            DrawHostlieProperties();
 
+            if(GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+            {
+                //Creates a hostile character scriptable object
+                ScriptableHostile newHostileChar = ScriptableObject.CreateInstance<ScriptableHostile>();
+                //Assigns values to the new hostile character object 
+                newHostileChar.name = m_newCharName;
+                newHostileChar.discription = m_newCharDisc;
+                newHostileChar.level = m_newCharStartingLevel;
+                newHostileChar.aggroRange = m_newHostileAggroRange;
+
+                //Creates the new character as a scriptable object 
+                ScriptObjUtill.CreateNewScriptableObj(newHostileChar, m_newCharName, "Assets/RPGWizzard/Characters/Hostiles/");
+            }
         }
 
         //Ends the properties box
@@ -186,6 +216,17 @@ public class CharacterTab : Tab
         //Experiance curve lable and field
         GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Exp Curve");
         m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0,0,m_newPlayerMaxLevel,50));
+    }
+
+    private void DrawHostlieProperties()
+    {
+        //Aggro range lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+
+        //Aggro range lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Aggro Range");
+        m_newHostileAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newHostileAggroRange);
     }
 
     private void DrawAttributesList(int yStart)
