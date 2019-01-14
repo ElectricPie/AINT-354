@@ -18,18 +18,18 @@ public class ScriptableObjUtil {
         }
     }
 
-    public type[] GetScriptableObjs<type>(string folder) where type : ScriptableObject
+    public List<type> GetScriptableObjs<type>(string folder) where type : ScriptableObject
     {
         //Gets the GUID for assets in the folder
         string[] assetGUID = AssetDatabase.FindAssets("", new string[] { folder });
 
         //Creates a new array of of the type
-        type[] objects = new type[assetGUID.Length];
+        List<type> objects = new List<type>();
 
         for (int i = 0; i < assetGUID.Length; i++)
         {
             //Loads the object using its path
-            objects[i] =  AssetDatabase.LoadAssetAtPath<type>(AssetDatabase.GUIDToAssetPath(assetGUID[i]));
+            objects.Add(AssetDatabase.LoadAssetAtPath<type>(AssetDatabase.GUIDToAssetPath(assetGUID[i])));
         }
         
         return objects;
