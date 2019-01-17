@@ -7,8 +7,6 @@ public class AttributesTab : Tab
 {
     private Vector2 m_scrollPosition;
 
-    private AttributesList m_attributesList;
-     
     private string m_newAttributeName;
     private string m_newAttributeSName;
     private string m_newAttributeDisc;
@@ -19,20 +17,24 @@ public class AttributesTab : Tab
     private string m_editAttributeDisc;
     private int m_editAttributeBaseValue;
 
+    private string m_attributesPath = "Assets/RPGWizzard/Attributes";
+
     private int m_tabState = 0;
 
     private int m_attributeToEdit;
 
-    private SaveLoadAttributes m_attributeStore;
+    private List<ScriptableAttribute> m_attributes;
+
+    private ScriptableObjUtil m_scriptObjUtill;
 
     public AttributesTab()
     {
-        m_tabName = "Attributes";
-        m_attributeStore = new SaveLoadAttributes();
-
-        m_attributesList = m_attributeStore.Load();
-         
+        m_tabName = "Attributes";       
         m_attributeToEdit = 0;
+
+        m_scriptObjUtill = new ScriptableObjUtil();
+
+        GetAttributes();
     }
 
     public override void DisplayTab()
@@ -52,9 +54,9 @@ public class AttributesTab : Tab
                 }
 
                 //Draws all attributes in the scroll view
-                for (int i = 0; i < m_attributesList.GetAttributes().Count; i++)
+                for (int i = 0; i < m_attributes.Count; i++)
                 {
-                    if (GUILayout.Button(m_attributesList.GetAttributes()[i].Name))
+                    if (GUILayout.Button(m_attributes[i].name))
                     {
                         m_attributeToEdit = i;
                         UpdateEditDisplay();
@@ -65,7 +67,7 @@ public class AttributesTab : Tab
                 GUILayout.EndScrollView();
 
                 //Starts displaying the edit attribute section
-                if (m_attributesList.GetAttributes().Count > 0)
+                if (m_attributes.Count > 0)
                 {
                     EditAttribute();
                 } 
@@ -89,28 +91,19 @@ public class AttributesTab : Tab
 
         if (GUILayout.Button("Create New Attribute"))
         {
-            //Creates a new attribute
-            Attribute newAttribute = new Attribute
-            {
-                Name = m_newAttributeName,
-                ShortName = m_newAttributeSName,
-                Disc = m_newAttributeDisc,
-                BaseValue = m_newAttributeBaseValue
-            };
+            //Creates a player character scriptable object
+            ScriptableAttribute newAttribute = ScriptableObject.CreateInstance<ScriptableAttribute>();
 
-            //Check if an attribute with the same name exists already
-            if (m_attributesList.CheckIfAttribute(newAttribute) == -1)
-            {
-                m_attributesList.AddAttribute(newAttribute);
+            //Assigns values to the new player character object 
+            newAttribute.name = m_newAttributeName;
+            newAttribute.sName = m_newAttributeSName;
+            newAttribute.disc = m_newAttributeDisc;
+            newAttribute.baseValue = m_newAttributeBaseValue;
 
-                m_attributeStore.Save(m_attributesList);
-                 
-                ResetNewAttributesTextField();
-            }
-            else
-            {
-                Debug.LogError("An attribute with the same name already exists");
-            }
+            //Creates the new character as a scriptable object 
+            m_scriptObjUtill.CreateNewScriptableObj(newAttribute, m_newAttributeName, "Assets/RPGWizzard/Attributes/");
+
+            GetAttributes();
         }
 
         //Draws the cancel button
@@ -137,13 +130,11 @@ public class AttributesTab : Tab
 
     private void UpdateEditDisplay()
     {
-        List<Attribute> attributeList = m_attributesList.GetAttributes();
-
         //Updates the edit section with the needed attributes data
-        m_editAttributeName = attributeList[m_attributeToEdit].Name;
-        m_editAttributeSName = attributeList[m_attributeToEdit].ShortName;
-        m_editAttributeDisc = attributeList[m_attributeToEdit].Disc;
-        m_editAttributeBaseValue = attributeList[m_attributeToEdit].BaseValue;
+        m_editAttributeName = m_attributes[m_attributeToEdit].name;
+        m_editAttributeSName = m_attributes[m_attributeToEdit].sName;
+        m_editAttributeDisc = m_attributes[m_attributeToEdit].disc;
+        m_editAttributeBaseValue = m_attributes[m_attributeToEdit].baseValue;
 
         //Pulls foucs away allowing values to reset
         GUI.FocusControl("");
@@ -155,28 +146,37 @@ public class AttributesTab : Tab
 
         //Draws the field for getting edited attribute data
         m_editAttributeName = EditorGUILayout.TextField("Name", m_editAttributeName);
-        m_editAttributeSName = EditorGUILayout.TextField("Short Name", m_newAttributeSName);
-        m_editAttributeDisc = EditorGUILayout.TextField("Discription", m_newAttributeDisc);
-        m_editAttributeBaseValue = EditorGUILayout.IntField("Base Value", m_newAttributeBaseValue);
+        m_editAttributeSName = EditorGUILayout.TextField("Short Name", m_editAttributeSName);
+        m_editAttributeDisc = EditorGUILayout.TextField("Discription", m_editAttributeDisc);
+        m_editAttributeBaseValue = EditorGUILayout.IntField("Base Value", m_editAttributeBaseValue);
 
         //Draws the button for editing attributes
-        if (GUILayout.Button("Edit Attribute"))
+        if (GUILayout.Button("Update Attribute"))
         {
             //Sets the new edited values
+            
+            /*
             m_attributesList.ChangeAttributeName(m_attributeToEdit, m_editAttributeName);
             m_attributesList.ChangeAttributeSName(m_attributeToEdit, m_editAttributeSName);
             m_attributesList.ChangeAttributeDisc(m_attributeToEdit, m_editAttributeDisc);
             m_attributesList.ChangeAttributeBaseValue(m_attributeToEdit, m_editAttributeBaseValue);
 
             m_attributeStore.Save(m_attributesList);
+            */
+
         }
 
         //Draws the delete attribute button
         if (GUILayout.Button("Delete Attribute"))
         {
-            m_attributesList.RemoveAttribute(m_attributeToEdit);
+            //m_attributesList.RemoveAttribute(m_attributeToEdit);
 
-            m_attributeStore.Save(m_attributesList);
+            //m_attributeStore.Save(m_attributesList);
         }
+    }
+
+    private void GetAttributes()
+    {
+        m_attributes = m_scriptObjUtill.GetScriptableObjs<ScriptableAttribute>(m_attributesPath);
     }
 }
