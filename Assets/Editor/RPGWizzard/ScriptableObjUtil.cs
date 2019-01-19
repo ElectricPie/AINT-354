@@ -34,4 +34,9 @@ public class ScriptableObjUtil {
         
         return objects;
     }
+    
+    public void DeleteScriptableObj(string path)
+    {
+        AssetDatabase.DeleteAsset(path);
+    }
 }
