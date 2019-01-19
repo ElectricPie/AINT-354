@@ -169,9 +169,10 @@ public class AttributesTab : Tab
         //Draws the delete attribute button
         if (GUILayout.Button("Delete Attribute"))
         {
-            //m_attributesList.RemoveAttribute(m_attributeToEdit);
+            Debug.Log("Deleting Attribute: " + m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset");
+            m_scriptObjUtill.DeleteScriptableObj(m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset");
 
-            //m_attributeStore.Save(m_attributesList);
+            GetAttributes();
         }
     }
 
