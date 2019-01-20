@@ -34,6 +34,7 @@ public class AttributesTab : Tab
 
         m_scriptObjUtill = new ScriptableObjUtil();
 
+        //Gets the inital list of attributes
         GetAttributes();
     }
 
@@ -103,7 +104,11 @@ public class AttributesTab : Tab
             //Creates the new character as a scriptable object 
             m_scriptObjUtill.CreateNewScriptableObj(newAttribute, m_newAttributeName, "Assets/RPGWizzard/Attributes/");
 
+            //Re-gets the attributs list so new attribute is included
             GetAttributes();
+
+            //Removes the new attributes fields
+            ResetNewAttributesTextField();
         }
 
         //Draws the cancel button
@@ -122,7 +127,7 @@ public class AttributesTab : Tab
         m_newAttributeName = "";
         m_newAttributeSName = "";
         m_newAttributeDisc = "";
-        m_newAttributeBaseValue = 0;
+        m_newAttributeBaseValue = 0; 
 
         //Pulls foucs away allowing values to reset
         GUI.FocusControl("");
@@ -153,31 +158,35 @@ public class AttributesTab : Tab
         //Draws the button for editing attributes
         if (GUILayout.Button("Update Attribute"))
         {
-            //Sets the new edited values
-            
-            /*
-            m_attributesList.ChangeAttributeName(m_attributeToEdit, m_editAttributeName);
-            m_attributesList.ChangeAttributeSName(m_attributeToEdit, m_editAttributeSName);
-            m_attributesList.ChangeAttributeDisc(m_attributeToEdit, m_editAttributeDisc);
-            m_attributesList.ChangeAttributeBaseValue(m_attributeToEdit, m_editAttributeBaseValue);
+            //Renames the file
+            m_scriptObjUtill.ChangeObjName(m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset", m_editAttributeName);
 
-            m_attributeStore.Save(m_attributesList);
-            */
+            //Updates attributes files
+            m_attributes[m_attributeToEdit].sName = m_editAttributeSName;
+            m_attributes[m_attributeToEdit].disc = m_editAttributeDisc;
+            m_attributes[m_attributeToEdit].baseValue = m_editAttributeBaseValue;
 
+            //Saves the scriptable object
+            m_scriptObjUtill.SaveAssets();
+
+            //Refreshes the list 
+            GetAttributes();
         }
 
         //Draws the delete attribute button
         if (GUILayout.Button("Delete Attribute"))
         {
-            Debug.Log("Deleting Attribute: " + m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset");
+            //Deletes the attribute
             m_scriptObjUtill.DeleteScriptableObj(m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset");
 
+            //Refreshes the list 
             GetAttributes();
         }
     }
 
     private void GetAttributes()
     {
+        //Gets a list of the attribues from the files
         m_attributes = m_scriptObjUtill.GetScriptableObjs<ScriptableAttribute>(m_attributesPath);
     }
 }
