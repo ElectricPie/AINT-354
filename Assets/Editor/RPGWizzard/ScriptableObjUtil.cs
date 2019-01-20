@@ -14,7 +14,7 @@ public class ScriptableObjUtil {
         else
         {
             AssetDatabase.CreateAsset(obj, path + objName + ".asset");
-            AssetDatabase.SaveAssets();
+            SaveAssets();
         }
     }
 
@@ -38,5 +38,16 @@ public class ScriptableObjUtil {
     public void DeleteScriptableObj(string path)
     {
         AssetDatabase.DeleteAsset(path);
+    }
+
+    public void ChangeObjName(string path, string name)
+    {
+        AssetDatabase.RenameAsset(path, name);
+        SaveAssets();
+    }
+
+    public void SaveAssets()
+    {
+        AssetDatabase.SaveAssets();
     }
 }
