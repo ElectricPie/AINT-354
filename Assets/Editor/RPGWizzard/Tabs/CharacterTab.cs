@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -25,7 +25,7 @@ public class CharacterTab : Tab
     private int m_characterListTab = 0;
     private int m_newCharStartingLevel;
 
-    private ScriptableObjUtil ScriptObjUtill;
+    private ScriptableObjUtil m_scriptObjUtill;
 
     private Rect m_mainBoxRect;
     private Rect m_playerScrollRect;
@@ -49,7 +49,7 @@ public class CharacterTab : Tab
     {
         m_tabName = "Characters";
 
-        ScriptObjUtill = new ScriptableObjUtil();
+        m_scriptObjUtill = new ScriptableObjUtil();
 
         m_playerCharacters = new List<ScriptablePlayer>();
         m_hostileCharacters = new List<ScriptableHostile>();
@@ -163,7 +163,7 @@ public class CharacterTab : Tab
                 newPlayerChar.experanceCurve = m_newPlayerExpCurve;
 
                 //Creates the new character as a scriptable object 
-                ScriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, "Assets/RPGWizzard/Characters/Players/");
+                m_scriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, "Assets/RPGWizzard/Characters/Players/");
             }
         }
         else
@@ -181,12 +181,12 @@ public class CharacterTab : Tab
                 newHostileChar.aggroRange = m_newHostileAggroRange;
 
                 //Creates the new character as a scriptable object 
-                ScriptObjUtill.CreateNewScriptableObj(newHostileChar, m_newCharName, "Assets/RPGWizzard/Characters/Hostiles/");
+                m_scriptObjUtill.CreateNewScriptableObj(newHostileChar, m_newCharName, "Assets/RPGWizzard/Characters/Hostiles/");
             }
         }
 
         //Ends the properties box
-        GUILayout.EndArea();
+        GUILayout.EndArea(); 
     }
 
     private void DrawGeneralProperties()
