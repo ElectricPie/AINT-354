@@ -44,7 +44,6 @@ public class AttributesTab : Tab
     {
         m_tabName = "Attributes";       
         m_attributeToEdit = 0;
-        m_tabState = 1;
 
         m_scriptObjUtill = new ScriptableObjUtil();
 
@@ -81,15 +80,12 @@ public class AttributesTab : Tab
         switch (m_tabState)
         {
             case 0:
-                //Starts displaying the edit attribute section
-                if (m_attributes.Count > 0)
-                {
-                    EditAttribute();
-                } 
-                
+                //Displays the new attribute section
+                NewAttribute();
                 break;
             case 1:
-                NewAttribute();
+                //Displays the edit attribute section
+                EditAttribute();
                 break;
         }
 
@@ -106,7 +102,7 @@ public class AttributesTab : Tab
 
         if (GUI.Button(new Rect(0, 0, m_attributeScrollRect.width - 20, 20), "New Attribute"))
         {
-            m_tabState = 1;
+            m_tabState = 0;
         }
 
         //Debug buttons to check scroll view size
@@ -201,46 +197,61 @@ public class AttributesTab : Tab
 
         //Pulls foucs away allowing values to reset
         GUI.FocusControl("");
+
+        m_tabState = 1;
     }
 
     //Tab State 0
-    private void EditAttribute()
+     private void EditAttribute()
     {
-        GUILayout.Label("Edit Attribute", EditorStyles.boldLabel);
+        GUI.Label(new Rect(0, m_propertyGap * 0, m_tagLength, m_propertyHeight), "Edit Attribute", EditorStyles.boldLabel);
 
         //Draws the field for getting edited attribute data
-        m_editAttributeName = EditorGUILayout.TextField("Name", m_editAttributeName);
-        m_editAttributeSName = EditorGUILayout.TextField("Short Name", m_editAttributeSName);
-        m_editAttributeDisc = EditorGUILayout.TextField("Discription", m_editAttributeDisc);
-        m_editAttributeBaseValue = EditorGUILayout.IntField("Base Value", m_editAttributeBaseValue);
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Name");
+        m_editAttributeName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, m_propertyHeight), m_editAttributeName);
 
-        //Draws the button for editing attributes
-        if (GUILayout.Button("Update Attribute"))
+        GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Short Name");
+        m_editAttributeSName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, m_propertyHeight), m_editAttributeSName);
+
+        GUI.Label(new Rect(0, m_propertyGap * 3, m_tagLength, m_propertyHeight), "Discription");
+        m_editAttributeDisc = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 3, m_fieldWidth, m_propertyHeight), m_editAttributeDisc);
+
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "BaseValue");
+        m_editAttributeBaseValue = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_editAttributeBaseValue);
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 5, m_propertiesBoxRect.width, m_propertyGap), "Edit Attribute"))
         {
-            //Renames the file
-            m_scriptObjUtill.ChangeObjName(m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset", m_editAttributeName);
+            //Edits the saved attribute
+            EditAttributeObj();
 
-            //Updates attributes files
-            m_attributes[m_attributeToEdit].sName = m_editAttributeSName;
-            m_attributes[m_attributeToEdit].disc = m_editAttributeDisc;
-            m_attributes[m_attributeToEdit].baseValue = m_editAttributeBaseValue;
-
-            //Saves the scriptable object
-            m_scriptObjUtill.SaveAssets();
-
-            //Refreshes the list 
+            //Re-gets the attributs list so new attribute is included
             GetAttributes();
+
+            //Removes the new attributes fields
+            ResetNewAttributesTextField();
         }
 
-        //Draws the delete attribute button
-        if (GUILayout.Button("Delete Attribute"))
+        //Draws the cancel button
+        if (GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
         {
-            //Deletes the attribute
-            m_scriptObjUtill.DeleteScriptableObj(m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset");
+            m_tabState = 0;
 
-            //Refreshes the list 
-            GetAttributes();
+            ResetNewAttributesTextField();
         }
+    }
+    
+    private void EditAttributeObj()
+    {
+        //Renames the file
+        m_scriptObjUtill.ChangeObjName(m_attributesPath + "/" + m_attributes[m_attributeToEdit].name + ".asset", m_editAttributeName);
+
+        //Updates attributes files
+        m_attributes[m_attributeToEdit].sName = m_editAttributeSName;
+        m_attributes[m_attributeToEdit].disc = m_editAttributeDisc;
+        m_attributes[m_attributeToEdit].baseValue = m_editAttributeBaseValue;
+
+        //Saves the scriptable object
+        m_scriptObjUtill.SaveAssets();
     }
 
     private void GetAttributes()
