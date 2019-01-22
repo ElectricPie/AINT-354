@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Hostile", menuName = "Characters/New Hostile")]
+[CreateAssetMenu(fileName = "New Hostile", menuName = "RPGWizzard/Characters/New Hostile")]
 public class ScriptableHostile : ScriptableCharacter
 {
     public int aggroRange;
