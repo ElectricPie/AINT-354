@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -65,9 +65,6 @@ public class CharacterTab : Tab
         GUILayout.BeginArea(m_mainBoxRect);
         //Updates the width of the fields which change with the main boxs width
         m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
-
-        //Calculates the height of the character scroll height so that it fits within and adapts to the main box
-        float scrollHeight = m_mainBoxRect.height / 2 - 30;
 
         //Draws the UI
         //Creates a tool bar which is used to select what type of characters the list should show

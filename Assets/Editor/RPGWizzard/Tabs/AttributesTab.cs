@@ -60,9 +60,6 @@ public class AttributesTab : Tab
         //Updates the width of the fields which change with the main boxs width
         m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
 
-        //Calculates the height of the character scroll height so that it fits within and adapts to the main box
-        float scrollHeight = m_mainBoxRect.height / 2 - 30;
-
         DrawAttributesList();
 
         DrawPropertiesBox();

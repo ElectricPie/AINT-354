@@ -11,11 +11,6 @@ using UnityEditor;
 public class RPGTool : EditorWindow {
     private int m_currentTab;
 
-    //Strings to hold the values when changing tabs
-    private string m_textField_tab1 = "";
-
-    private static bool m_dragginObject_tab3 = false;
-
     private SceneView m_sceneWindow;
 
     private Tab[] m_tabs;
@@ -24,11 +19,6 @@ public class RPGTool : EditorWindow {
 
     private void OnEnable()
     {
-        //Gets the scene window
-        //m_sceneWindow = (SceneView)GetWindow(typeof(SceneView), false, "SceneView");
-
-        //SceneView.onSceneGUIDelegate += SceneGUI;
-
         //Gets tabs
         m_tabs = new Tab[3] { new GeneralTab() ,new CharacterTab(), new AttributesTab() };
 
@@ -52,7 +42,7 @@ public class RPGTool : EditorWindow {
     public static void ShowWindow()
     {
         //Opens the window
-        EditorWindow mainWindow = EditorWindow.GetWindow(typeof(RPGTool));
+        EditorWindow.GetWindow(typeof(RPGTool));
     }
 
     private void OnGUI()
@@ -60,7 +50,7 @@ public class RPGTool : EditorWindow {
         int previousTab = m_currentTab;
 
         //Creates and updates tabs
-        m_currentTab = GUILayout.Toolbar(m_currentTab, m_tabNames);//new string[] { m_tabs[0].TabName, m_tabs[1].TabName, m_tabs[2].TabName, "Test 3"});
+        m_currentTab = GUILayout.Toolbar(m_currentTab, m_tabNames);
 
         switch (m_currentTab)
         {
@@ -77,11 +67,6 @@ public class RPGTool : EditorWindow {
                 m_tabs[2].DisplayTab();
                 m_tabs[2].WindowSize = position;
                 break;
-            /*
-            case 3:
-                DisplayTabThree();
-                break;
-            */
         }
 
         //Checks if a tab is changed
@@ -92,6 +77,7 @@ public class RPGTool : EditorWindow {
         }
     }
 
+    /* May be used later
     private void DisplayTabThree()
     {
         //------
@@ -135,4 +121,5 @@ public class RPGTool : EditorWindow {
         //End Copy
         //------
     }
+    */
 }
