@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -73,11 +73,11 @@ public class CharacterTab : Tab
         //Draws the player/hostile list depending on the toolbar selection
         if (m_characterListTab == 0)
         {
-            DrawCharacterList(GetCharacterNames(m_playerCharacters));
+            DrawCharacterList(GetCharacterNames<ScriptablePlayer>(m_playerCharacters));
         }
         else
         {
-            DrawCharacterList(GetCharacterNames(m_hostileCharacters));
+            DrawCharacterList(GetCharacterNames<ScriptableHostile>(m_hostileCharacters));
         }
         //Draws the properties box
         DrawPropertiesBox();
@@ -86,28 +86,14 @@ public class CharacterTab : Tab
         GUILayout.EndArea();
     }
 
-    private List<string> GetCharacterNames(List<ScriptablePlayer> characters)
+    private List<string> GetCharacterNames<charType>(List<charType> characters) where charType : ScriptableCharacter
     {
         List<string> names = new List<string>();
 
-        //Creates a list of names from the characters
+        //Gets all the names of characters from the provided list
         for (int i = 0; i < characters.Count; i++)
         {
-            names[i] = characters[i].name;
-        }
-
-        return names;
-    }
-
-    //Override for above
-    private List<string> GetCharacterNames(List<ScriptableHostile> characters)
-    {
-        List<string> names = new List<string>();
-
-        //Creates a list of names from the characters
-        for (int i = 0; i < characters.Count; i++)
-        {
-            names[i] = characters[i].name;
+            names.Add(characters[i].name);
         }
 
         return names;
