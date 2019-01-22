@@ -73,11 +73,11 @@ public class CharacterTab : Tab
         //Draws the player/hostile list depending on the toolbar selection
         if (m_characterListTab == 0)
         {
-            DrawCharacterList(GetCharacterNames<ScriptablePlayer>(m_playerCharacters));
+            DrawCharacterList(m_playerCharacters);
         }
         else
         {
-            DrawCharacterList(GetCharacterNames<ScriptableHostile>(m_hostileCharacters));
+            DrawCharacterList(m_hostileCharacters);
         }
         //Draws the properties box
         DrawPropertiesBox();
@@ -86,32 +86,20 @@ public class CharacterTab : Tab
         GUILayout.EndArea();
     }
 
-    private List<string> GetCharacterNames<charType>(List<charType> characters) where charType : ScriptableCharacter
-    {
-        List<string> names = new List<string>();
-
-        //Gets all the names of characters from the provided list
-        for (int i = 0; i < characters.Count; i++)
-        {
-            names.Add(characters[i].name);
-        }
-
-        return names;
-    }
-
-    private void DrawCharacterList(List<string> names)
+    private void DrawCharacterList<charType>(List<charType> characters) where charType : ScriptableCharacter
     {
         //Updates the dimensions for the player scroll view
         m_playerScrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 22);
         //Draws the player characters list
-        m_playerScrollPos = GUI.BeginScrollView(m_playerScrollRect, m_playerScrollPos, new Rect(0, 0, m_playerScrollRect.width - 20, names.Count * 20));
+        m_playerScrollPos = GUI.BeginScrollView(m_playerScrollRect, m_playerScrollPos, new Rect(0, 0, m_playerScrollRect.width - 20, characters.Count * 20));
 
-        if (GUI.Button(new Rect(0, 0, m_playerScrollRect.width - 20, 20), "New Character")) {
-            
+        if (GUI.Button(new Rect(0, 0, m_playerScrollRect.width - 20, 20), "New Character"))
+        {
+
         }
 
         //Debug buttons to check scroll view size
-        for (int i = 0; i < names.Count; i++)
+        for (int i = 0; i < characters.Count; i++)
         {
             //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
             if (GUI.Button(new Rect(0, i * 20 + 21, m_playerScrollRect.width - 20, 20), "Player [" + i + "]"))
