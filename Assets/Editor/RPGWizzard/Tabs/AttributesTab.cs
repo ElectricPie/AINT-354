@@ -27,10 +27,24 @@ public class AttributesTab : Tab
 
     private ScriptableObjUtil m_scriptObjUtill;
 
+    private Rect m_mainBoxRect;
+    private Rect m_propertiesBoxRect;
+    private Rect m_attributeScrollRect;
+    private Vector2 m_attributeScrollPos;
+
+    //Sets the width that all tags will be
+    private float m_tagLength = 95;
+    //Sets the height that all properties will be
+    private float m_propertyHeight = 20;
+    //Sets the distance between each propertys 
+    private float m_propertyGap = 21;
+    private float m_fieldWidth;
+
     public AttributesTab()
     {
         m_tabName = "Attributes";       
         m_attributeToEdit = 0;
+        m_tabState = 1;
 
         m_scriptObjUtill = new ScriptableObjUtil();
 
@@ -40,69 +54,98 @@ public class AttributesTab : Tab
 
     public override void DisplayTab()
     {
+        //Updates the dimensions of the drawing space in relations to the window
+        m_mainBoxRect = new Rect(20, 30, m_windowSize.width - 40, m_windowSize.height - 50);
+        //Creats the main box using the adaptable rect
+        GUILayout.BeginArea(m_mainBoxRect);
+        //Updates the width of the fields which change with the main boxs width
+        m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
+
+        //Calculates the height of the character scroll height so that it fits within and adapts to the main box
+        float scrollHeight = m_mainBoxRect.height / 2 - 30;
+
+        DrawAttributesList();
+
+        DrawPropertiesBox();
+
+        GUILayout.EndArea();
+    }
+
+    private void DrawPropertiesBox()
+    {
+        //Creates the dimensions for the attributes properties box
+        m_propertiesBoxRect = new Rect(210, 0, m_mainBoxRect.width - 220, m_mainBoxRect.height);
+        //Drawns the properties of the attributes 
+        GUILayout.BeginArea(m_propertiesBoxRect);
+
         switch (m_tabState)
         {
             case 0:
-                GUILayout.Label("Attributes", EditorStyles.boldLabel);
-
-                //Draws the scroll view
-                m_scrollPosition = GUILayout.BeginScrollView(m_scrollPosition, GUILayout.Width(200), GUILayout.Height(100));
-
-                //Draws the new attribute button
-                if (GUILayout.Button("New Attribute"))
-                {
-                    m_tabState = 1;
-                }
-
-                //Draws all attributes in the scroll view
-                for (int i = 0; i < m_attributes.Count; i++)
-                {
-                    if (GUILayout.Button(m_attributes[i].name))
-                    {
-                        m_attributeToEdit = i;
-                        UpdateEditDisplay();
-                    }
-                }
-
-                //Ends the scroll view
-                GUILayout.EndScrollView();
-
                 //Starts displaying the edit attribute section
                 if (m_attributes.Count > 0)
                 {
                     EditAttribute();
                 } 
+                
                 break;
             case 1:
                 NewAttribute();
                 break;
         }
+
+        //Ends the properties box
+        GUILayout.EndArea();
+    }
+
+    private void DrawAttributesList()
+    {
+        //Updates the dimensions for the player scroll view
+        m_attributeScrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 20);
+        //Draws the player characters list
+        m_attributeScrollPos = GUI.BeginScrollView(m_attributeScrollRect, m_attributeScrollPos, new Rect(0, 0, m_attributeScrollRect.width - 20, (m_attributes.Count + 1) * 20));
+
+        if (GUI.Button(new Rect(0, 0, m_attributeScrollRect.width - 20, 20), "New Attribute"))
+        {
+            m_tabState = 1;
+        }
+
+        //Debug buttons to check scroll view size
+        for (int i = 0; i < m_attributes.Count; i++)
+        {
+            //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
+            if (GUI.Button(new Rect(0, i * 20 + 21, m_attributeScrollRect.width - 20, 20), m_attributes[i].name))
+            {
+                m_attributeToEdit = i;
+                UpdateEditDisplay();
+            }
+        }
+
+        GUI.EndScrollView();
     }
 
     //Tab state 1
     private void NewAttribute()
     {
-        GUILayout.Label("New Attribute", EditorStyles.boldLabel);
+        GUI.Label(new Rect(0, m_propertyGap * 0, m_tagLength, m_propertyHeight), "New Attribute", EditorStyles.boldLabel);
 
         //Draws and gets the values for a new attribute
-        m_newAttributeName = EditorGUILayout.TextField("Name", m_newAttributeName);
-        m_newAttributeSName = EditorGUILayout.TextField("Short Name", m_newAttributeSName);
-        m_newAttributeDisc = EditorGUILayout.TextField("Discription", m_newAttributeDisc);
-        m_newAttributeBaseValue = EditorGUILayout.IntField("Base Value", m_newAttributeBaseValue);
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Name");
+        m_newAttributeName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, m_propertyHeight), m_newAttributeName);
 
-        if (GUILayout.Button("Create New Attribute"))
+        GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Short Name");
+        m_newAttributeSName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, m_propertyHeight), m_newAttributeSName);
+
+        GUI.Label(new Rect(0, m_propertyGap * 3, m_tagLength, m_propertyHeight), "Description");
+        m_newAttributeDisc = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 3, m_fieldWidth, m_propertyHeight), m_newAttributeDisc);
+
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Base Value");
+        m_newAttributeBaseValue = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newAttributeBaseValue);
+
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 5, m_propertiesBoxRect.width, m_propertyGap), "Create New Attribute"))
         {
-            //Creates a player character scriptable object
-            ScriptableAttribute newAttribute = ScriptableObject.CreateInstance<ScriptableAttribute>();
-
-            //Assigns values to the new player character object 
-            newAttribute.name = m_newAttributeName;
-            newAttribute.sName = m_newAttributeSName;
-            newAttribute.disc = m_newAttributeDisc;
-            newAttribute.baseValue = m_newAttributeBaseValue;
-
-            //Creates the new character as a scriptable object 
-            m_scriptObjUtill.CreateNewScriptableObj(newAttribute, m_newAttributeName, "Assets/RPGWizzard/Attributes/");
+            //Creates the attribute
+            CreateNewAttribute();
 
             //Re-gets the attributs list so new attribute is included
             GetAttributes();
@@ -112,10 +155,25 @@ public class AttributesTab : Tab
         }
 
         //Draws the cancel button
-        if (GUILayout.Button("Cancel"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
         {
             ResetNewAttributesTextField();
         }
+    }
+
+    private void CreateNewAttribute()
+    {
+        //Creates a player character scriptable object
+        ScriptableAttribute newAttribute = ScriptableObject.CreateInstance<ScriptableAttribute>();
+
+        //Assigns values to the new player character object 
+        newAttribute.name = m_newAttributeName;
+        newAttribute.sName = m_newAttributeSName;
+        newAttribute.disc = m_newAttributeDisc;
+        newAttribute.baseValue = m_newAttributeBaseValue;
+
+        //Creates the new character as a scriptable object 
+        m_scriptObjUtill.CreateNewScriptableObj(newAttribute, m_newAttributeName, "Assets/RPGWizzard/Attributes/");
     }
 
     private void ResetNewAttributesTextField()
@@ -145,6 +203,7 @@ public class AttributesTab : Tab
         GUI.FocusControl("");
     }
 
+    //Tab State 0
     private void EditAttribute()
     {
         GUILayout.Label("Edit Attribute", EditorStyles.boldLabel);
