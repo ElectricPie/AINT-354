@@ -27,8 +27,22 @@ public class CharacterTab : Tab
 
     private string m_HostileCharPath = "Assets/RPGWizzard/Characters/Hostiles";
 
+    //Edit Character
+    private string m_editCharName;
+    private string m_editCharDisc;
+    private int m_editCharLevel;
+    //-Player
+    private int m_editCharMaxLevel;
+    private AnimationCurve m_editCharExpCurve;
+    //-Hostile
+    private int m_editAggroRange;
+
+    private int m_characterToEdit;
+    private int m_tabState;
+
+
     //General
-    private int m_characterListTab = 0;
+    private int m_characterType = 0;
     private int m_newCharStartingLevel;
 
     private ScriptableObjUtil m_scriptObjUtill;
@@ -76,16 +90,16 @@ public class CharacterTab : Tab
 
         //Draws the UI
         //Creates a tool bar which is used to select what type of characters the list should show
-        m_characterListTab = GUI.Toolbar(new Rect(0, 0, 200, 20), m_characterListTab, new string[] { "Player", "Hostile" });
+        m_characterType = GUI.Toolbar(new Rect(0, 0, 200, 20), m_characterType, new string[] { "Player", "Hostile" });
 
         //Draws the player/hostile list depending on the toolbar selection
-        if (m_characterListTab == 0)
+        if (m_characterType == 0)
         {
-            DrawCharacterList(m_playerCharacters, ref m_playerScrollRect, ref m_playerScrollPos);
+            DrawCharacterList(m_playerCharacters, ref m_playerScrollRect, ref m_playerScrollPos, 1);
         }
         else
         {
-            DrawCharacterList(m_hostileCharacters, ref m_hostileScrollRect, ref m_hostileScrollPos);
+            DrawCharacterList(m_hostileCharacters, ref m_hostileScrollRect, ref m_hostileScrollPos, 2);
         }
         //Draws the properties box
         DrawPropertiesBox();
@@ -94,7 +108,7 @@ public class CharacterTab : Tab
         GUILayout.EndArea();
     }
 
-    private void DrawCharacterList<charType>(List<charType> characters, ref Rect scrollRect, ref Vector2 scrollPos) where charType : ScriptableCharacter
+    private void DrawCharacterList<charType>(List<charType> characters, ref Rect scrollRect, ref Vector2 scrollPos, int editState) where charType : ScriptableCharacter
     {
         //Updates the dimensions for the player scroll view
         scrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 22);
@@ -103,22 +117,32 @@ public class CharacterTab : Tab
 
         if (GUI.Button(new Rect(0, 0, scrollRect.width - 20, 20), "New Character"))
         {
-
+            m_tabState = 0;
         }
-        
+
         //Debug buttons to check scroll view size
         for (int i = 0; i < characters.Count; i++)
         {
             //Creates a buttons with a interval of 20 between each button and with a width 20 less than the scroll view to allow for the scroll bar.
             if (GUI.Button(new Rect(0, i * 20 + 21, scrollRect.width - 20, 20), characters[i].name))
             {
-
+                m_characterToEdit = i;
+                m_tabState = editState;
+                if (m_tabState == 1)
+                {
+                    UpdatePlayerEdit();
+                }
+                else if (m_tabState == 2)
+                {
+                    UpdateHostileEdit();
+                }
             }
         }
-        
+
 
         GUI.EndScrollView();
     }
+
 
     private void DrawPropertiesBox()
     {
@@ -127,49 +151,43 @@ public class CharacterTab : Tab
         //Drawns the properties of the character 
         GUILayout.BeginArea(m_propertiesBoxRect);
 
-        DrawGeneralProperties();
-
-        if (m_characterListTab == 0)
+        switch (m_tabState)
         {
-            DrawPlayerProperties();
-            //DrawAttributesList(130);
+            //New character
+            case 0:
+                DrawGeneralProperties();
 
-            if(GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
-            {
-                //Creates a player character scriptable object
-                ScriptablePlayer newPlayerChar = ScriptableObject.CreateInstance<ScriptablePlayer>();
-                //Assigns values to the new player character object 
-                newPlayerChar.name = m_newCharName;
-                newPlayerChar.discription = m_newCharDisc;
-                newPlayerChar.level = m_newCharStartingLevel;
-                newPlayerChar.maxLevel = m_newPlayerMaxLevel;
-                newPlayerChar.experanceCurve = m_newPlayerExpCurve;
+                if (m_characterType == 0)
+                {
+                    DrawPlayerProperties();
 
-                //Creates the new character as a scriptable object 
-                m_scriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, m_playerCharPath + "/");
-            }
+                    if (GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+                    {
+                        CreateNewPlayerChar();
+                    }
+                }
+                else
+                {
+                    DrawHostlieProperties();
+
+                    if (GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+                    {
+                        CreateNewHostileChar();
+                    }
+                }
+                break;
+            //Edit player character
+            case 1:
+                DrawPlayerEditPropeties();
+                break;
+            case 2:
+                DrawHostileEditPropeties();
+                break;
         }
-        else
-        {
-            DrawHostlieProperties();
-
-            if(GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
-            {
-                //Creates a hostile character scriptable object
-                ScriptableHostile newHostileChar = ScriptableObject.CreateInstance<ScriptableHostile>();
-                //Assigns values to the new hostile character object 
-                newHostileChar.name = m_newCharName;
-                newHostileChar.discription = m_newCharDisc;
-                newHostileChar.level = m_newCharStartingLevel;
-                newHostileChar.aggroRange = m_newHostileAggroRange;
-
-                //Creates the new character as a scriptable object 
-                m_scriptObjUtill.CreateNewScriptableObj(newHostileChar, m_newCharName, m_HostileCharPath + "/");
-            }
-        }
-
         //Ends the properties box
-        GUILayout.EndArea(); 
+        GUILayout.EndArea();
+                
+        
     }
 
     private void DrawGeneralProperties()
@@ -195,8 +213,39 @@ public class CharacterTab : Tab
 
         //Experiance curve lable and field
         GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Exp Curve");
-        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0,0,m_newPlayerMaxLevel,50));
+        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0, 0, m_newPlayerMaxLevel, 50));
     }
+
+
+    private void CreateNewPlayerChar()
+    {
+        //Creates a player character scriptable object
+        ScriptablePlayer newPlayerChar = ScriptableObject.CreateInstance<ScriptablePlayer>();
+        //Assigns values to the new player character object 
+        newPlayerChar.name = m_newCharName;
+        newPlayerChar.discription = m_newCharDisc;
+        newPlayerChar.level = m_newCharStartingLevel;
+        newPlayerChar.maxLevel = m_newPlayerMaxLevel;
+        newPlayerChar.experanceCurve = m_newPlayerExpCurve;
+
+        //Creates the new character as a scriptable object 
+        m_scriptObjUtill.CreateNewScriptableObj(newPlayerChar, m_newCharName, m_playerCharPath + "/");
+    }
+
+    private void CreateNewHostileChar()
+    {
+        //Creates a hostile character scriptable object
+        ScriptableHostile newHostileChar = ScriptableObject.CreateInstance<ScriptableHostile>();
+        //Assigns values to the new hostile character object 
+        newHostileChar.name = m_newCharName;
+        newHostileChar.discription = m_newCharDisc;
+        newHostileChar.level = m_newCharStartingLevel;
+        newHostileChar.aggroRange = m_newHostileAggroRange;
+
+        //Creates the new character as a scriptable object 
+        m_scriptObjUtill.CreateNewScriptableObj(newHostileChar, m_newCharName, m_HostileCharPath + "/");
+    }
+
 
     private void DrawHostlieProperties()
     {
@@ -219,6 +268,7 @@ public class CharacterTab : Tab
         GUI.EndScrollView();
     }
 
+
     private void GetCharacters()
     {
         GetPlayerChar();
@@ -227,21 +277,86 @@ public class CharacterTab : Tab
 
     private void GetPlayerChar()
     {
+        //Gets any scriptable player objects from storage
         m_playerCharacters = m_scriptObjUtill.GetScriptableObjs<ScriptablePlayer>(m_playerCharPath);
-
-        for (int i = 0; i < m_playerCharacters.Count; i++)
-        {
-            Debug.Log(m_playerCharacters[i].name);
-        }
     }
 
     private void GetHostileChar()
     {
+        //Gets any scriptable hostile objects from storage
         m_hostileCharacters = m_scriptObjUtill.GetScriptableObjs<ScriptableHostile>(m_HostileCharPath);
+    }
 
-        for (int i = 0; i < m_playerCharacters.Count; i++)
-        {
-            Debug.Log(m_hostileCharacters[i].name);
-        }
+
+    private void UpdatePlayerEdit()
+    {
+        //Updates the edit section with the needed character data
+        m_editCharName = m_playerCharacters[m_characterToEdit].name;
+        m_editCharDisc = m_playerCharacters[m_characterToEdit].discription;
+        m_editCharLevel = m_playerCharacters[m_characterToEdit].level;
+        m_editCharMaxLevel = m_playerCharacters[m_characterToEdit].maxLevel;
+        m_editCharExpCurve = m_playerCharacters[m_characterToEdit].experanceCurve;
+
+        //Pulls foucs away allowing values to reset
+        GUI.FocusControl("");
+    }
+
+    private void UpdateHostileEdit()
+    {
+        //Updates the edit section with the needed character data
+        m_editCharName = m_hostileCharacters[m_characterToEdit].name;
+        m_editCharDisc = m_hostileCharacters[m_characterToEdit].discription;
+        m_editCharLevel = m_hostileCharacters[m_characterToEdit].level;
+        m_editAggroRange = m_hostileCharacters[m_characterToEdit].aggroRange;
+
+        //Pulls foucs away allowing values to reset
+        GUI.FocusControl("");
+    }
+
+
+    private void DrawPlayerEditPropeties()
+    {
+        GUI.Label(new Rect(0, m_propertyGap * 0, 200, m_propertyHeight), "Edit Player Character", EditorStyles.boldLabel);
+
+        //Name lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Name");
+        m_editCharName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, m_propertyHeight), m_editCharName);
+
+        //Discription lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Discription");
+        m_editCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, 60), m_editCharDisc);
+
+        //Starting level lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Starting Level");
+        m_editCharLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_editCharLevel);
+
+        //Max Level lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Max Level");
+        m_editCharMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight), m_editCharMaxLevel);
+
+        //Experiance curve lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 7, m_tagLength, m_propertyHeight), "Exp Curve");
+        m_editCharExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 7, m_fieldWidth, m_propertyHeight * 6), m_editCharExpCurve, Color.green, new Rect(0, 0, m_editCharMaxLevel, 50));
+    }
+
+    private void DrawHostileEditPropeties()
+    {
+        GUI.Label(new Rect(0, m_propertyGap * 0, 200, m_propertyHeight), "Edit Hostile Character", EditorStyles.boldLabel);
+
+        //Name lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Name");
+        m_editCharName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, m_propertyHeight), m_editCharName);
+
+        //Discription lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Discription");
+        m_editCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, 60), m_editCharDisc);
+
+        //Level lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Level");
+        m_editCharLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_editCharLevel);
+
+        //Aggro range lable and field
+        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Aggro Range");
+        m_editAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight), m_editAggroRange);
     }
 }
