@@ -337,6 +337,20 @@ public class CharacterTab : Tab
         //Experiance curve lable and field
         GUI.Label(new Rect(0, m_propertyGap * 7, m_tagLength, m_propertyHeight), "Exp Curve");
         m_editCharExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 7, m_fieldWidth, m_propertyHeight * 6), m_editCharExpCurve, Color.green, new Rect(0, 0, m_editCharMaxLevel, 50));
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 13, m_propertiesBoxRect.width, m_propertyGap), "Update Character"))
+        {
+            SavePlayerObj();
+
+            //Returns the tab to the new character creation
+            m_tabState = 0;
+        }
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 14, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
+        {
+            //Returns the tab to the new character creation
+            m_tabState = 0;
+        }
     }
 
     private void DrawHostileEditPropeties()
@@ -358,5 +372,49 @@ public class CharacterTab : Tab
         //Aggro range lable and field
         GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Aggro Range");
         m_editAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight), m_editAggroRange);
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 7, m_propertiesBoxRect.width, m_propertyGap), "Update Character"))
+        {
+            SaveHostileObj();
+
+            //Returns the tab to the new character creation
+            m_tabState = 0;
+        }
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 8, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
+        {
+            //Returns the tab to the new character creation
+            m_tabState = 0;
+        }
+    }
+
+
+    private void SavePlayerObj()
+    {
+        //Renames the file
+        m_scriptObjUtill.ChangeObjName(m_playerCharPath + "/" + m_playerCharacters[m_characterToEdit].name + ".asset", m_editCharName);
+
+        //Updates characters properties files
+        m_playerCharacters[m_characterToEdit].discription = m_editCharDisc;
+        m_playerCharacters[m_characterToEdit].level = m_editCharLevel;
+        m_playerCharacters[m_characterToEdit].maxLevel = m_editCharMaxLevel;
+        m_playerCharacters[m_characterToEdit].experanceCurve = m_editCharExpCurve;
+
+        //Saves the scriptable object
+        m_scriptObjUtill.SaveAssets();
+    }
+
+    private void SaveHostileObj()
+    {
+        //Renames the file
+        m_scriptObjUtill.ChangeObjName(m_HostileCharPath + "/" + m_hostileCharacters[m_characterToEdit].name + ".asset", m_editCharName);
+
+        //Updates characters properties files
+        m_hostileCharacters[m_characterToEdit].discription = m_editCharDisc;
+        m_hostileCharacters[m_characterToEdit].level = m_editCharLevel;
+        m_hostileCharacters[m_characterToEdit].aggroRange = m_editAggroRange;
+
+        //Saves the scriptable object
+        m_scriptObjUtill.SaveAssets();
     }
 }
