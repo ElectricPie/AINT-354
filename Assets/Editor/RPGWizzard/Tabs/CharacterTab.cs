@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -113,7 +113,7 @@ public class CharacterTab : Tab
         //Updates the dimensions for the player scroll view
         scrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 22);
         //Draws the player characters list
-        scrollPos = GUI.BeginScrollView(scrollRect, scrollPos, new Rect(0, 0, scrollRect.width - 20, characters.Count * 20));
+        scrollPos = GUI.BeginScrollView(scrollRect, scrollPos, new Rect(0, 0, scrollRect.width - 20, characters.Count * 20), false, true);
 
         if (GUI.Button(new Rect(0, 0, scrollRect.width - 20, 20), "New Character"))
         {
