@@ -351,6 +351,14 @@ public class CharacterTab : Tab
             //Returns the tab to the new character creation
             m_tabState = 0;
         }
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 16, m_propertiesBoxRect.width, m_propertyGap), "Delete"))
+        {
+            DeleteCharacter(m_playerCharPath + "/" + m_playerCharacters[m_characterToEdit].name + ".asset");
+
+            //Returns the tab to the new character creation
+            m_tabState = 0;
+        }
     }
 
     private void DrawHostileEditPropeties()
@@ -386,6 +394,14 @@ public class CharacterTab : Tab
             //Returns the tab to the new character creation
             m_tabState = 0;
         }
+
+        if (GUI.Button(new Rect(0, m_propertyGap * 10, m_propertiesBoxRect.width, m_propertyGap), "Delete"))
+        {
+            DeleteCharacter(m_HostileCharPath + "/" + m_hostileCharacters[m_characterToEdit].name + ".asset");
+
+            //Returns the tab to the new character creation
+            m_tabState = 0;
+        }
     }
 
 
@@ -416,5 +432,10 @@ public class CharacterTab : Tab
 
         //Saves the scriptable object
         m_scriptObjUtill.SaveAssets();
+    }
+
+    private void DeleteCharacter(string path)
+    {
+        m_scriptObjUtill.DeleteScriptableObj(path);
     }
 }
