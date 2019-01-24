@@ -99,6 +99,8 @@ public class SceneCharacterCreator : EditorWindow {
                 charObj.GetComponent<PlayerCharacter>().Level = characterTemplate.level;
                 charObj.GetComponent<PlayerCharacter>().MaxLevel = characterTemplate.maxLevel;
                 charObj.GetComponent<PlayerCharacter>().ExperianceCurve = characterTemplate.experanceCurve;
+
+                charObj.GetComponent<PlayerCharacter>().Attributes = AddAttributes(characterTemplate); ;
             }
             else if (m_character is ScriptableHostile)
             {
@@ -115,9 +117,30 @@ public class SceneCharacterCreator : EditorWindow {
                 charObj.GetComponent<HostileCharacter>().Level = characterTemplate.level;
                 charObj.GetComponent<HostileCharacter>().AggroRange = characterTemplate.aggroRange;
 
+                charObj.GetComponent<HostileCharacter>().Attributes = AddAttributes(characterTemplate);
+
                 //Removes the camera from the hostile character
                 DestroyImmediate(charObj.transform.GetChild(0).gameObject);
             }
         }
+    }
+
+    public List<Attribute> AddAttributes(ScriptableCharacter characterTemplate)
+    {
+        //Adds attributes to the character
+        List<Attribute> attributes = new List<Attribute>();
+        for (int i = 0; i < characterTemplate.attributes.Count; i++)
+        {
+            attributes.Add(
+                new Attribute()
+                {
+                    Name = characterTemplate.attributes[i].name,
+                    ShortName = characterTemplate.attributes[i].sName,
+                    Disc = characterTemplate.attributes[i].disc,
+                    BaseValue = characterTemplate.attributes[i].baseValue
+                });
+        }
+
+        return attributes
     }
 }
