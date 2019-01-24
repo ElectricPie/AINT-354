@@ -22,7 +22,7 @@ public class SceneCharacterCreator : EditorWindow {
     [MenuItem("GameObject/RPG Wizzard/Characters/Create Character", false, 0)]
     public static void ShowWindow()
     {
-        EditorWindow.GetWindow(typeof(ScenePlayerCharacter));
+        EditorWindow.GetWindow(typeof(SceneCharacterCreator));
     }
 
     public void OnGUI()
