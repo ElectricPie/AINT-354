@@ -40,4 +40,10 @@ public class HostileCharacter : Character
             }
         }
     }
+
+    public float AggroRange
+    {
+        get { return m_aggroRange; }
+        set { m_aggroRange = value; }
+    }
 }

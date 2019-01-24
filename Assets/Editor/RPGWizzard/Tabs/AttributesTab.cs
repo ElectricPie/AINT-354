@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -93,9 +93,9 @@ public class AttributesTab : Tab
     private void DrawAttributesList()
     {
         //Updates the dimensions for the player scroll view
-        m_attributeScrollRect = new Rect(0, 22, 200, m_mainBoxRect.height - 20);
+        m_attributeScrollRect = new Rect(0, 0, 200, m_mainBoxRect.height);
         //Draws the player characters list
-        m_attributeScrollPos = GUI.BeginScrollView(m_attributeScrollRect, m_attributeScrollPos, new Rect(0, 0, m_attributeScrollRect.width - 20, (m_attributes.Count + 1) * 20));
+        m_attributeScrollPos = GUI.BeginScrollView(m_attributeScrollRect, m_attributeScrollPos, new Rect(0, 0, m_attributeScrollRect.width - 20, (m_attributes.Count + 1) * 20), false, true);
 
         if (GUI.Button(new Rect(0, 0, m_attributeScrollRect.width - 20, 20), "New Attribute"))
         {

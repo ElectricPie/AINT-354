@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a31f70de96669374d9f6e8ad23c12dfa
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_PersistentViewDataDictionary: {instanceID: 0}
+  - CharacterPrefab: {fileID: 1904344553949260, guid: e63249cbb27368544b5724698bb0cb84,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
