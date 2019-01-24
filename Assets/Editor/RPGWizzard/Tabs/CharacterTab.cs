@@ -1,10 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class CharacterTab : Tab
 {
+
+
     //Player character 
     private Rect m_playerScrollRect;
     private Vector2 m_playerScrollPos;
@@ -54,8 +57,9 @@ public class CharacterTab : Tab
     private string m_newCharName;
     private string m_newCharDisc;
 
-    private Vector2 m_attributeListScrollPos;
-    private List<Attribute> m_newCharAttributes;
+    private List<ScriptableAttribute> m_newAttributes;
+    private Rect m_attributeScrollRect;
+    private Vector2 m_attributeScrollPos;
 
     //Sets the width that all tags will be
     private float m_tagLength = 90;
@@ -73,6 +77,8 @@ public class CharacterTab : Tab
 
         m_playerCharacters = new List<ScriptablePlayer>();
         m_hostileCharacters = new List<ScriptableHostile>();
+
+        m_newAttributes = new List<ScriptableAttribute>();
 
         m_newPlayerExpCurve = AnimationCurve.Linear(0, 0, 50, 50);
     }
@@ -161,7 +167,7 @@ public class CharacterTab : Tab
                 {
                     DrawPlayerProperties();
 
-                    if (GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+                    if (GUI.Button(new Rect(0, m_propertyGap * 16, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
                     {
                         CreateNewPlayerChar();
                     }
@@ -170,7 +176,7 @@ public class CharacterTab : Tab
                 {
                     DrawHostlieProperties();
 
-                    if (GUI.Button(new Rect(0, m_propertyGap * 6, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+                    if (GUI.Button(new Rect(0, m_propertyGap * 10, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
                     {
                         CreateNewHostileChar();
                     }
@@ -186,8 +192,6 @@ public class CharacterTab : Tab
         }
         //Ends the properties box
         GUILayout.EndArea();
-                
-        
     }
 
     private void DrawGeneralProperties()
@@ -199,21 +203,111 @@ public class CharacterTab : Tab
         //Discription lable and field
         GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Discription");
         m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, 60), m_newCharDisc);
+
+        DrawAttributeScroll();
     }
+
+    private void DrawAttributeScroll()
+    {
+        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Attributes");
+        //Updates the dimensions for the characters attributes scroll view
+        m_attributeScrollRect = new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, 80);
+        //Draws the characters attributes
+        m_attributeScrollPos = GUI.BeginScrollView(m_attributeScrollRect, m_attributeScrollPos, new Rect(0, 0, m_attributeScrollRect.width - 20, m_newAttributes.Count * 20 + 20), false, true);
+
+        //Drag and drop from: https://gist.github.com/bzgeb/3800350
+        Event evt = Event.current;
+        Rect drop_area = new Rect(0, 0, m_attributeScrollRect.width - 20, 20);
+        GUI.Box(drop_area, "Add Attribute");
+
+        switch (evt.type)
+        {
+            case EventType.DragUpdated:
+            case EventType.DragPerform:
+                //Does nothing if the mouse isnt in the drop area
+                if (!drop_area.Contains(evt.mousePosition))
+                {
+                    //Ends the scroll view if the droped asset is in the scroll view
+                    GUI.EndScrollView();
+                    return;
+                }
+
+                //Displays the mouse icon when an object is dragged on top
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+
+                if (evt.type == EventType.DragPerform)
+                {
+                    DragAndDrop.AcceptDrag();
+
+                    //Catches errors for incorrect object type
+                    try
+                    {
+                        foreach (ScriptableAttribute dragged_object in DragAndDrop.objectReferences)
+                        {
+                            if (!CheckIfHasAttribute(dragged_object))
+                            {
+                                AddAttribute(dragged_object);
+                            }
+                            else
+                            {
+                                Debug.LogWarning("Character already has attribute: " + dragged_object.name);
+                            }
+                        }
+                    }
+                    catch (Exception ex) { }
+                }
+                break;
+        }
+
+        //Draws the attributes attached to the character
+        for (int i = 0; i < m_newAttributes.Count; i++)
+        {
+            //Replace with box
+            if (GUI.Button(new Rect(0, i * 20 + 21, m_attributeScrollRect.width - 50, 20), m_newAttributes[i].name)) { 
+
+            }
+
+            if (GUI.Button(new Rect(m_attributeScrollRect.width - 50, i * 20 + 21, 30, 20), "X"))
+            {
+                m_newAttributes.RemoveAt(i);
+            }
+        }
+
+        GUI.EndScrollView();
+    }
+
+    private bool CheckIfHasAttribute(ScriptableAttribute attribute)
+    {
+        for (int i = 0; i < m_newAttributes.Count; i++)
+        {
+            if (attribute == m_newAttributes[i])
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void AddAttribute(ScriptableAttribute attribute)
+    {
+        m_newAttributes.Add(attribute);
+    }
+
 
     private void DrawPlayerProperties()
     {
         //Starting level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Starting Level");
-        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 8, m_tagLength, m_propertyHeight), "Starting Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 8, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
         //Max Level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Max Level");
-        m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Max Level");
+        m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
 
         //Experiance curve lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Exp Curve");
-        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0, 0, m_newPlayerMaxLevel, 50));
+        GUI.Label(new Rect(0, m_propertyGap * 10, m_tagLength, m_propertyHeight), "Exp Curve");
+        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 10, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0, 0, m_newPlayerMaxLevel, 50));
     }
 
 
@@ -224,6 +318,7 @@ public class CharacterTab : Tab
         //Assigns values to the new player character object 
         newPlayerChar.name = m_newCharName;
         newPlayerChar.discription = m_newCharDisc;
+        newPlayerChar.attributes = m_newAttributes;
         newPlayerChar.level = m_newCharStartingLevel;
         newPlayerChar.maxLevel = m_newPlayerMaxLevel;
         newPlayerChar.experanceCurve = m_newPlayerExpCurve;
@@ -239,6 +334,7 @@ public class CharacterTab : Tab
         //Assigns values to the new hostile character object 
         newHostileChar.name = m_newCharName;
         newHostileChar.discription = m_newCharDisc;
+        newHostileChar.attributes = m_newAttributes;
         newHostileChar.level = m_newCharStartingLevel;
         newHostileChar.aggroRange = m_newHostileAggroRange;
 
@@ -250,22 +346,12 @@ public class CharacterTab : Tab
     private void DrawHostlieProperties()
     {
         //Aggro range lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Level");
-        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 8, m_tagLength, m_propertyHeight), "Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 8, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
         //Aggro range lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Aggro Range");
-        m_newHostileAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_newHostileAggroRange);
-    }
-
-    private void DrawAttributesList(int yStart)
-    {
-        //Updates the dimensions for the attribute scroll view
-        Rect attributeScrollRect = new Rect(0, yStart, 200, m_mainBoxRect.height - 22);
-        //Draws the attribute list
-        m_attributeListScrollPos = GUI.BeginScrollView(attributeScrollRect, m_attributeListScrollPos, attributeScrollRect);
-
-        GUI.EndScrollView();
+        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Aggro Range");
+        m_newHostileAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_newHostileAggroRange);
     }
 
 
