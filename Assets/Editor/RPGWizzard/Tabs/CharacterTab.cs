@@ -57,12 +57,12 @@ public class CharacterTab : Tab
     private string m_newCharName;
     private string m_newCharDisc;
 
-    private List<ScriptableAttribute> m_newAttributes;
+    private List<ScriptableAttribute> m_attributes;
     private Rect m_attributeScrollRect;
     private Vector2 m_attributeScrollPos;
 
     //Sets the width that all tags will be
-    private float m_tagLength = 90;
+    private float m_tagLength = 100;
     //Sets the height that all properties will be
     private float m_propertyHeight = 20;
     //Sets the distance between each propertys 
@@ -78,7 +78,7 @@ public class CharacterTab : Tab
         m_playerCharacters = new List<ScriptablePlayer>();
         m_hostileCharacters = new List<ScriptableHostile>();
 
-        m_newAttributes = new List<ScriptableAttribute>();
+        m_attributes = new List<ScriptableAttribute>();
 
         m_newPlayerExpCurve = AnimationCurve.Linear(0, 0, 50, 50);
     }
@@ -167,7 +167,7 @@ public class CharacterTab : Tab
                 {
                     DrawPlayerProperties();
 
-                    if (GUI.Button(new Rect(0, m_propertyGap * 16, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+                    if (GUI.Button(new Rect(0, m_propertyGap * 17, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
                     {
                         CreateNewPlayerChar();
                     }
@@ -176,7 +176,7 @@ public class CharacterTab : Tab
                 {
                     DrawHostlieProperties();
 
-                    if (GUI.Button(new Rect(0, m_propertyGap * 10, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
+                    if (GUI.Button(new Rect(0, m_propertyGap * 11, m_propertiesBoxRect.width, m_propertyGap), "Create Character"))
                     {
                         CreateNewHostileChar();
                     }
@@ -196,24 +196,26 @@ public class CharacterTab : Tab
 
     private void DrawGeneralProperties()
     {
+        GUI.Label(new Rect(0, m_propertyGap * 0, m_tagLength, m_propertyHeight), "New Character", EditorStyles.boldLabel);
+
         //Name lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 0, m_tagLength, m_propertyHeight), "Name");
-        m_newCharName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 0, m_fieldWidth, m_propertyHeight), m_newCharName);
+        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Name");
+        m_newCharName = GUI.TextField(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, m_propertyHeight), m_newCharName);
 
         //Discription lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 1, m_tagLength, m_propertyHeight), "Discription");
-        m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 1, m_fieldWidth, 60), m_newCharDisc);
+        GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Discription");
+        m_newCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, 60), m_newCharDisc);
 
         DrawAttributeScroll();
     }
 
     private void DrawAttributeScroll()
     {
-        GUI.Label(new Rect(0, m_propertyGap * 4, m_tagLength, m_propertyHeight), "Attributes");
+        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Attributes");
         //Updates the dimensions for the characters attributes scroll view
-        m_attributeScrollRect = new Rect(m_tagLength, m_propertyGap * 4, m_fieldWidth, 80);
+        m_attributeScrollRect = new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, 80);
         //Draws the characters attributes
-        m_attributeScrollPos = GUI.BeginScrollView(m_attributeScrollRect, m_attributeScrollPos, new Rect(0, 0, m_attributeScrollRect.width - 20, m_newAttributes.Count * 20 + 20), false, true);
+        m_attributeScrollPos = GUI.BeginScrollView(m_attributeScrollRect, m_attributeScrollPos, new Rect(0, 0, m_attributeScrollRect.width - 20, m_attributes.Count * 20 + 20), false, true);
 
         //Drag and drop from: https://gist.github.com/bzgeb/3800350
         Event evt = Event.current;
@@ -260,17 +262,22 @@ public class CharacterTab : Tab
         }
 
         //Draws the attributes attached to the character
-        for (int i = 0; i < m_newAttributes.Count; i++)
+        for (int i = 0; i < m_attributes.Count; i++)
         {
-            //Replace with box
-            if (GUI.Button(new Rect(0, i * 20 + 21, m_attributeScrollRect.width - 50, 20), m_newAttributes[i].name)) { 
-
-            }
-
-            if (GUI.Button(new Rect(m_attributeScrollRect.width - 50, i * 20 + 21, 30, 20), "X"))
+            if (m_attributes[i] != null)
             {
-                m_newAttributes.RemoveAt(i);
+                //Replace with box
+                if (GUI.Button(new Rect(0, i * 20 + 21, m_attributeScrollRect.width - 50, 20), m_attributes[i].name))
+                {
+
+                }
+
+                if (GUI.Button(new Rect(m_attributeScrollRect.width - 50, i * 20 + 21, 30, 20), "X"))
+                {
+                    m_attributes.RemoveAt(i);
+                }
             }
+            
         }
 
         GUI.EndScrollView();
@@ -278,9 +285,9 @@ public class CharacterTab : Tab
 
     private bool CheckIfHasAttribute(ScriptableAttribute attribute)
     {
-        for (int i = 0; i < m_newAttributes.Count; i++)
+        for (int i = 0; i < m_attributes.Count; i++)
         {
-            if (attribute == m_newAttributes[i])
+            if (attribute == m_attributes[i])
             {
                 return true;
             }
@@ -291,23 +298,23 @@ public class CharacterTab : Tab
 
     private void AddAttribute(ScriptableAttribute attribute)
     {
-        m_newAttributes.Add(attribute);
+        m_attributes.Add(attribute);
     }
 
 
     private void DrawPlayerProperties()
     {
         //Starting level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 8, m_tagLength, m_propertyHeight), "Starting Level");
-        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 8, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Starting Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
         //Max Level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Max Level");
-        m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 10, m_tagLength, m_propertyHeight), "Max Level");
+        m_newPlayerMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 10, m_fieldWidth, m_propertyHeight), m_newPlayerMaxLevel);
 
         //Experiance curve lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 10, m_tagLength, m_propertyHeight), "Exp Curve");
-        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 10, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0, 0, m_newPlayerMaxLevel, 50));
+        GUI.Label(new Rect(0, m_propertyGap * 11, m_tagLength, m_propertyHeight), "Exp Curve");
+        m_newPlayerExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 11, m_fieldWidth, m_propertyHeight * 6), m_newPlayerExpCurve, Color.green, new Rect(0, 0, m_newPlayerMaxLevel, 50));
     }
 
 
@@ -318,7 +325,7 @@ public class CharacterTab : Tab
         //Assigns values to the new player character object 
         newPlayerChar.name = m_newCharName;
         newPlayerChar.discription = m_newCharDisc;
-        newPlayerChar.attributes = m_newAttributes;
+        newPlayerChar.attributes = m_attributes;
         newPlayerChar.level = m_newCharStartingLevel;
         newPlayerChar.maxLevel = m_newPlayerMaxLevel;
         newPlayerChar.experanceCurve = m_newPlayerExpCurve;
@@ -334,7 +341,7 @@ public class CharacterTab : Tab
         //Assigns values to the new hostile character object 
         newHostileChar.name = m_newCharName;
         newHostileChar.discription = m_newCharDisc;
-        newHostileChar.attributes = m_newAttributes;
+        newHostileChar.attributes = m_attributes;
         newHostileChar.level = m_newCharStartingLevel;
         newHostileChar.aggroRange = m_newHostileAggroRange;
 
@@ -346,12 +353,12 @@ public class CharacterTab : Tab
     private void DrawHostlieProperties()
     {
         //Aggro range lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 8, m_tagLength, m_propertyHeight), "Level");
-        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 8, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Level");
+        m_newCharStartingLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_newCharStartingLevel);
 
         //Aggro range lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Aggro Range");
-        m_newHostileAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_newHostileAggroRange);
+        GUI.Label(new Rect(0, m_propertyGap * 10, m_tagLength, m_propertyHeight), "Aggro Range");
+        m_newHostileAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 10, m_fieldWidth, m_propertyHeight), m_newHostileAggroRange);
     }
 
 
@@ -379,6 +386,8 @@ public class CharacterTab : Tab
         //Updates the edit section with the needed character data
         m_editCharName = m_playerCharacters[m_characterToEdit].name;
         m_editCharDisc = m_playerCharacters[m_characterToEdit].discription;
+        m_attributes = m_playerCharacters[m_characterToEdit].attributes;
+        CheckForNulls();
         m_editCharLevel = m_playerCharacters[m_characterToEdit].level;
         m_editCharMaxLevel = m_playerCharacters[m_characterToEdit].maxLevel;
         m_editCharExpCurve = m_playerCharacters[m_characterToEdit].experanceCurve;
@@ -392,12 +401,32 @@ public class CharacterTab : Tab
         //Updates the edit section with the needed character data
         m_editCharName = m_hostileCharacters[m_characterToEdit].name;
         m_editCharDisc = m_hostileCharacters[m_characterToEdit].discription;
+        m_attributes = m_hostileCharacters[m_characterToEdit].attributes;
+        CheckForNulls();
         m_editCharLevel = m_hostileCharacters[m_characterToEdit].level;
         m_editAggroRange = m_hostileCharacters[m_characterToEdit].aggroRange;
+
 
         //Pulls foucs away allowing values to reset
         GUI.FocusControl("");
     }
+
+    private void CheckForNulls()
+    {
+        //Checks the attribues list for any nulls and removes them
+        for (int i = 0; i < m_attributes.Count;)
+        {
+            if (m_attributes[i] == null)
+            {
+                m_attributes.RemoveAt(i);
+            }
+            else
+            {
+                i++;
+            }
+        }
+    }
+
 
 
     private void DrawPlayerEditPropeties()
@@ -412,19 +441,21 @@ public class CharacterTab : Tab
         GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Discription");
         m_editCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, 60), m_editCharDisc);
 
+        DrawAttributeScroll();
+
         //Starting level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Starting Level");
-        m_editCharLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_editCharLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Starting Level");
+        m_editCharLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 9, m_fieldWidth, m_propertyHeight), m_editCharLevel);
 
         //Max Level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Max Level");
-        m_editCharMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight), m_editCharMaxLevel);
+        GUI.Label(new Rect(0, m_propertyGap * 10, m_tagLength, m_propertyHeight), "Max Level");
+        m_editCharMaxLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 10, m_fieldWidth, m_propertyHeight), m_editCharMaxLevel);
 
         //Experiance curve lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 7, m_tagLength, m_propertyHeight), "Exp Curve");
-        m_editCharExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 7, m_fieldWidth, m_propertyHeight * 6), m_editCharExpCurve, Color.green, new Rect(0, 0, m_editCharMaxLevel, 50));
+        GUI.Label(new Rect(0, m_propertyGap * 11, m_tagLength, m_propertyHeight), "Exp Curve");
+        m_editCharExpCurve = EditorGUI.CurveField(new Rect(m_tagLength, m_propertyGap * 11, m_fieldWidth, m_propertyHeight * 6), m_editCharExpCurve, Color.green, new Rect(0, 0, m_editCharMaxLevel, 50));
 
-        if (GUI.Button(new Rect(0, m_propertyGap * 13, m_propertiesBoxRect.width, m_propertyGap), "Update Character"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 17, m_propertiesBoxRect.width, m_propertyGap), "Update Character"))
         {
             SavePlayerObj();
 
@@ -432,13 +463,13 @@ public class CharacterTab : Tab
             m_tabState = 0;
         }
 
-        if (GUI.Button(new Rect(0, m_propertyGap * 14, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 18, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
         {
             //Returns the tab to the new character creation
             m_tabState = 0;
         }
 
-        if (GUI.Button(new Rect(0, m_propertyGap * 16, m_propertiesBoxRect.width, m_propertyGap), "Delete"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 20, m_propertiesBoxRect.width, m_propertyGap), "Delete"))
         {
             DeleteCharacter(m_playerCharPath + "/" + m_playerCharacters[m_characterToEdit].name + ".asset");
 
@@ -459,15 +490,17 @@ public class CharacterTab : Tab
         GUI.Label(new Rect(0, m_propertyGap * 2, m_tagLength, m_propertyHeight), "Discription");
         m_editCharDisc = GUI.TextArea(new Rect(m_tagLength, m_propertyGap * 2, m_fieldWidth, 60), m_editCharDisc);
 
+        DrawAttributeScroll();
+
         //Level lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 5, m_tagLength, m_propertyHeight), "Level");
+        GUI.Label(new Rect(0, m_propertyGap * 9, m_tagLength, m_propertyHeight), "Level");
         m_editCharLevel = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 5, m_fieldWidth, m_propertyHeight), m_editCharLevel);
 
         //Aggro range lable and field
-        GUI.Label(new Rect(0, m_propertyGap * 6, m_tagLength, m_propertyHeight), "Aggro Range");
+        GUI.Label(new Rect(0, m_propertyGap * 10, m_tagLength, m_propertyHeight), "Aggro Range");
         m_editAggroRange = EditorGUI.IntField(new Rect(m_tagLength, m_propertyGap * 6, m_fieldWidth, m_propertyHeight), m_editAggroRange);
 
-        if (GUI.Button(new Rect(0, m_propertyGap * 7, m_propertiesBoxRect.width, m_propertyGap), "Update Character"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 11, m_propertiesBoxRect.width, m_propertyGap), "Update Character"))
         {
             SaveHostileObj();
 
@@ -475,13 +508,13 @@ public class CharacterTab : Tab
             m_tabState = 0;
         }
 
-        if (GUI.Button(new Rect(0, m_propertyGap * 8, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 12, m_propertiesBoxRect.width, m_propertyGap), "Cancel"))
         {
             //Returns the tab to the new character creation
             m_tabState = 0;
         }
 
-        if (GUI.Button(new Rect(0, m_propertyGap * 10, m_propertiesBoxRect.width, m_propertyGap), "Delete"))
+        if (GUI.Button(new Rect(0, m_propertyGap * 14, m_propertiesBoxRect.width, m_propertyGap), "Delete"))
         {
             DeleteCharacter(m_HostileCharPath + "/" + m_hostileCharacters[m_characterToEdit].name + ".asset");
 
@@ -498,6 +531,7 @@ public class CharacterTab : Tab
 
         //Updates characters properties files
         m_playerCharacters[m_characterToEdit].discription = m_editCharDisc;
+        m_playerCharacters[m_characterToEdit].attributes = m_attributes;
         m_playerCharacters[m_characterToEdit].level = m_editCharLevel;
         m_playerCharacters[m_characterToEdit].maxLevel = m_editCharMaxLevel;
         m_playerCharacters[m_characterToEdit].experanceCurve = m_editCharExpCurve;
@@ -513,6 +547,7 @@ public class CharacterTab : Tab
 
         //Updates characters properties files
         m_hostileCharacters[m_characterToEdit].discription = m_editCharDisc;
+        m_hostileCharacters[m_characterToEdit].attributes = m_attributes;
         m_hostileCharacters[m_characterToEdit].level = m_editCharLevel;
         m_hostileCharacters[m_characterToEdit].aggroRange = m_editAggroRange;
 
