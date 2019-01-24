@@ -6,7 +6,6 @@ public class PlayerCharacter : Character
 {
     private InputHandler m_inputHandler;
     private AnimationCurve m_experianceCurve;
-    private int m_minLevel;
     private int m_maxLevel;
     private int m_experiance;
 
@@ -22,5 +21,17 @@ public class PlayerCharacter : Character
     {
         //Calls the input handler
         m_inputHandler.HandleInput();
+    }
+
+    public int MaxLevel
+    {
+        get { return m_maxLevel; }
+        set { m_maxLevel = value; }
+    }
+
+    public AnimationCurve ExperianceCurve
+    {
+        get { return m_experianceCurve; }
+        set { m_experianceCurve = value; }
     }
 }
