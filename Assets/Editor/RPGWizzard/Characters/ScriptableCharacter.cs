@@ -6,4 +6,6 @@ public class ScriptableCharacter : ScriptableObject {
     public string discription;
 
     public int level;
+
+    public List<ScriptableAttribute> attributes;
 }
