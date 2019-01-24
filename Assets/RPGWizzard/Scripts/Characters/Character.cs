@@ -8,6 +8,7 @@ public class Character : MonoBehaviour {
     private string m_name;
     [SerializeField]
     private float m_speed = 8;
+    [SerializeField]
     private List<Attribute> m_attributes;
     private int m_level;
 
