@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -59,6 +59,9 @@ public class AttributesTab : Tab
         GUILayout.BeginArea(m_mainBoxRect);
         //Updates the width of the fields which change with the main boxs width
         m_fieldWidth = m_propertiesBoxRect.width - m_tagLength;
+
+        //Gets the inital list of attributes
+        GetAttributes();
 
         DrawAttributesList();
 
